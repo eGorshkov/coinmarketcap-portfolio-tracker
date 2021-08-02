@@ -1,0 +1,7 @@
+node_modules
+dist
+.DS_Store
+.idea
+public
+.clinic
+__sqlite-data/data.db

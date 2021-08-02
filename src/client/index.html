@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>SSE</title>
+  </head>
+  <body>
+    <h1>SSE</h1>
+    <div id="root"></div>
+
+    <script>
+      const sse = new EventSource(`https://localhost:5000/stream`);
+      console.log("Start stream!");
+
+      const dataElem = document.getElementById("root");
+
+      sse.addEventListener("get-prices", function (e) {
+        console.log(e.data);
+        dataElem.innerText = e.data;
+      });
+
+      sse.addEventListener("end-of-stream", () => {
+        console.log("End of stream!");
+        sse.close();
+      });
+    </script>
+  </body>
+</html>
