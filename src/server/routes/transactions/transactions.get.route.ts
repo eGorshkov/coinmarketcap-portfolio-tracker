@@ -12,8 +12,8 @@ function getTransactions(props: ServerRouteProps) {
             tr.coinSymbol,
             tr.count,
             tr.date,
-            tr.typeƒ∂
-            FROM ${process.env.TRANSACTIONS_DB} tr, (SELECT * FROM ${process.env.ACTIVES_TRANSASCTIONS_DB}) actr
+            tr.type
+            FROM ${process.env.TRANSACTIONS_DB} tr, ${process.env.ACTIVES_TRANSASCTIONS_DB} actr
             WHERE actr.activityId == ?
             AND actr.transactionId == tr.id`;
 
