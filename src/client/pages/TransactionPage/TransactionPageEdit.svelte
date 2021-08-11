@@ -8,6 +8,7 @@
     transactions,
     getTransactions,
     deleteTransaction,
+    selectedPortfolioId,
   } from '../../stores';
 
   export let row: Transaction;
@@ -18,7 +19,9 @@
   }
 
   async function updateTransactions() {
-    const _transactions = await getTransactions();
+    const _transactions = await getTransactions({
+      portfolioId: $selectedPortfolioId,
+    });
 
     transactions.set(_transactions);
     prices.set(createPrices(_transactions, $prices));

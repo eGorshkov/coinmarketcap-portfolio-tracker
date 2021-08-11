@@ -1,11 +1,14 @@
-import { writable, derived } from 'svelte/store';
-import type { Transaction, Active } from '../../common/types';
+import { writable, derived, Readable } from 'svelte/store';
+import type { Transaction, Active, Portfolio } from '../../common/types';
 
 export const transactions = writable<Transaction[]>([]);
 
 export const prices = writable<{ [key: string]: number | string | null }>({});
 
 export const actives = writable<Active[]>([]);
+
+export const portfolios = writable<Portfolio[]>([]);
+export const selectedPortfolioId = writable<Portfolio['id'] | null>(null);
 
 export const total = derived(
   actives,

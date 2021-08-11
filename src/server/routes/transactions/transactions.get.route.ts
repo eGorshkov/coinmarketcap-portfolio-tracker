@@ -5,28 +5,30 @@ import type { ServerRouteProps } from '../../../common/types';
 
 function getTransactions(props: ServerRouteProps) {
   const { url, stream } = props;
-  const SQL_REQUEST_ALL_TRANSACTIONS = `SELECT * FROM ${process.env.TRANSACTIONS_DB}`;
-  const SQL_REQUEST_TRANSACTIONS_BY_ACTIVITY_ID = `SELECT 
-            tr.id,
-            tr.coinPrice,
-            tr.coinSymbol,
-            tr.count,
-            tr.date,
-            tr.type
-            FROM ${process.env.TRANSACTIONS_DB} tr, ${process.env.ACTIVES_TRANSASCTIONS_DB} actr
-            WHERE actr.activityId == ?
-            AND actr.transactionId == tr.id`;
 
   const db = new sqlite3.Database(SQLITE_DIR);
   const activityId = url.searchParams.has('activityId')
     ? +url.searchParams.get('activityId')
     : null;
+  const portfolioId = url.searchParams.has('portfolioId')
+    ? +url.searchParams.get('portfolioId')
+    : null;
+
+  const SQL_REQUEST_TRANSACTIONS = [
+    `SELECT 
+    tr.*,
+    (SELECT ptc.portfolioId  FROM ${process.env.PORTFOLIOS_TRANSACTIONS_DB} ptc WHERE ptc.transactionId = tr.id) as portfolioId
+    FROM ${process.env.TRANSACTIONS_DB} tr, ${process.env.ACTIVES_TRANSASCTIONS_DB} actr
+    WHERE 1 AND actr.transactionId == tr.id`,
+    activityId && ' AND actr.activityId == ?',
+    portfolioId && ' AND portfolioId == ?',
+  ]
+    .filter(Boolean)
+    .join('\n');
 
   db.all(
-    activityId
-      ? SQL_REQUEST_TRANSACTIONS_BY_ACTIVITY_ID
-      : SQL_REQUEST_ALL_TRANSACTIONS,
-    activityId ? [activityId] : [],
+    SQL_REQUEST_TRANSACTIONS,
+    [activityId, portfolioId].filter(Boolean),
     (err, data) => {
       if (err) {
         stream.respond({

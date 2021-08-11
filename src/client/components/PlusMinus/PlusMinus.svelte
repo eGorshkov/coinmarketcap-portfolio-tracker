@@ -6,10 +6,14 @@
 <span class={isPlus ? 'green' : 'red'}>
   {isPlus ? '▲' : '▼'}
   {percent.toString().replace('-', '')}%
-  <slot></slot>
+  <slot />
 </span>
 
 <style>
+  span {
+    font-weight: bold;
+  }
+  
   .green {
     color: teal;
   }

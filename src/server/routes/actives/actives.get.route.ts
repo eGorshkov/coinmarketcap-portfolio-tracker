@@ -4,22 +4,40 @@ import { SQLITE_DIR } from '../../constants';
 import type { ServerRouteProps } from '../../../common/types';
 
 function getActives(props: ServerRouteProps) {
-  const { stream } = props;
-  const SQL_REQUEST_ALL_TRANSACTIONS = `SELECT 
-	ac.id,
-	ac.symbol as coinSymbol,
-	COUNT(tr.id) as transactionsCount,
-	SUM(tr.count) as count,
-	SUM(tr.count*tr.coinPrice) as value,
-	IFNULL(SUM(tr.count*tr.coinPrice)/SUM(tr.count), 0) as avgPrice
-    FROM ${process.env.ACTIVES_DB} ac, (SELECT * FROM ${process.env.ACTIVES_TRANSASCTIONS_DB}) actr, (SELECT * FROM ${process.env.TRANSACTIONS_DB}) tr
-	WHERE actr.activityId = ac.id
-	AND tr.id = actr.transactionId
-	GROUP BY ac.id
-	ORDER BY value DESC`;
+  const { url, stream } = props;
+  const portfolioId = url.searchParams.has('portfolioId')
+    ? +url.searchParams.get('portfolioId')
+    : null;
+
+  const SQL_REQUEST_ALL_ACTIVES = [
+    `
+    SELECT 
+      ac.id,
+      ac.symbol as coinSymbol,
+      COUNT(tr.id) as transactionsCount,	
+      SUM(tr.count) as count,
+      SUM(tr.count*tr.coinPrice) as value,
+      IFNULL(SUM(tr.count*tr.coinPrice)/SUM(tr.count), 0) as avgPrice,
+      (SELECT GROUP_CONCAT(DISTINCT ptc.portfolioId) FROM ${process.env.PORTFOLIOS_TRANSACTIONS_DB} ptc WHERE ptc.transactionId == atc.transactionId) as portfolioIds
+
+    FROM
+      ${process.env.ACTIVES_DB} ac, 
+      ${process.env.ACTIVES_TRANSASCTIONS_DB} atc, 
+      ${process.env.TRANSACTIONS_DB} tr
+
+    WHERE ac.id == atc.activityId
+      AND tr.id == atc.transactionId
+      
+    GROUP BY atc.activityId`,
+    portfolioId && `HAVING instr(portfolioIds, ${portfolioId}) > 0`,
+    'ORDER BY value DESC',
+  ]
+    .filter(Boolean)
+    .join('\n');
+
   const db = new sqlite3.Database(SQLITE_DIR);
 
-  db.all(SQL_REQUEST_ALL_TRANSACTIONS, [], (err, data) => {
+  db.all(SQL_REQUEST_ALL_ACTIVES, [], (err, data) => {
     if (err) {
       stream.respond({
         ':status': constants.HTTP_STATUS_BAD_REQUEST,

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { afterUpdate, beforeUpdate, onDestroy, onMount } from 'svelte';
+  import { afterUpdate, onDestroy, onMount } from 'svelte';
   import {
     Router,
     Route,
@@ -19,21 +19,31 @@
     getActives,
     actives,
     createActive,
+    getPortfolios,
+    portfolios,
+    selectedPortfolioId,
   } from './stores';
   import { OVERLAY_CONTAINER_ID } from './constants/ui';
-  import type { Active } from '../common/types';
 
   const memoryHistory = createHistory(createMemorySource());
   let isLoading = false;
   let sse: EventSource;
 
-  onMount(async () => {
-    const _transactions = await getTransactions();
-    const _actives = await getActives();
+  async function update() {
+    console.log('$prices', $prices);
+
+    const _transactions = await getTransactions({
+      portfolioId: $selectedPortfolioId,
+    });
+    const _actives = await getActives($selectedPortfolioId);
 
     transactions.set(_transactions);
-    prices.set(createPrices(_transactions));
     actives.set(_actives.map(createActive($prices)));
+  }
+
+  onMount(async () => {
+    const _portfolios = await getPortfolios();
+    portfolios.set(_portfolios);
 
     sse = new EventSource('https://localhost:5000/stream');
 
@@ -48,19 +58,22 @@
   onDestroy(() => {
     sse?.close();
   });
+
+  $: $selectedPortfolioId, update();
 </script>
 
 <Router history={memoryHistory}>
-  <header>
-    <nav>
-      <Link to="/">Home</Link>
-      <Link to="transactions">Transactions</Link>
-      <Link to="charts">Charts</Link>
+  <header class="header">
+    <h2>HULIMARKETCAP</h2>
+    <nav class="header__navigation">
+      <Link class="navigation__link" to="/">Home</Link>
+      <Link class="navigation__link" to="transactions">Transactions</Link>
+      <Link class="navigation__link" to="charts">Charts</Link>
     </nav>
   </header>
   <main>
     {#if isLoading}
-      <div class="ui-overlay ui-overlay--dark preloader" />
+      <div class="ui-overlay ui-overlay--active preloader" />
     {/if}
 
     <Route path="/">
@@ -87,7 +100,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: 48px;
-    color: white;
+    color: var(--theme-color);
   }
 
   :global(.ui-overlay) {
@@ -98,11 +111,49 @@
     left: 0;
     z-index: 900;
   }
-  :global(.ui-overlay--dark) {
-    background-color: rgba(0, 0, 0, 0.5);
+  :global(.ui-overlay--active) {
+    background-color: var(--theme-overlay-bg-color);
   }
 
   :global(body.hidden) {
     overflow: hidden;
+  }
+
+  :global(body),
+  :global(input),
+  :global(ui-select),
+  :global(button) {
+    background-color: var(--theme-bg-color);
+    border-color: var(--theme-border-color);
+  }
+
+  :global(body) {
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+  }
+
+  :global(main) {
+    padding: 8px;
+    height: -webkit-fill-available;
+  }
+
+  .header {
+    background-color: var(--theme-header-bg-color);
+    display: flex;
+    align-items: center;
+    padding: 8px;
+  }
+
+  :global(.navigation__link) {
+    padding: 10px;
+  }
+
+  :global(.navigation__link[aria-current]) {
+    color: var(--theme-link-active-color);
+  }
+
+  :global(*) {
+    color: var(--theme-color);
   }
 </style>

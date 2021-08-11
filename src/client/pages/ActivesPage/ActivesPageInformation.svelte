@@ -70,10 +70,9 @@
   .info-item {
     margin: 10px;
     padding: 10px;
-    border: 1px solid rgba(0, 0, 0, 0.3);
+    border: 1px solid;
     border-radius: 8px;
     text-align: left;
-    background-color: white;
   }
   
   .info-item:not(:last-child) {

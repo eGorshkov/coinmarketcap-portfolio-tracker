@@ -4,10 +4,72 @@ import resolve from '@rollup/plugin-node-resolve';
 import sveltePreprocess from 'svelte-preprocess';
 import typescript from '@rollup/plugin-typescript';
 import css from 'rollup-plugin-css-only';
-import html, { RollupHtmlTemplateOptions } from "@rollup/plugin-html";
-import path from "path";
+import { terser } from 'rollup-plugin-terser';
+import livereload from 'rollup-plugin-livereload';
+import path from 'path';
+import fs from 'fs';
+import { cyan } from 'kleur';
 
 const production = !process.env.ROLLUP_WATCH;
+
+function serve() {
+  let server;
+
+  function toExit() {
+    if (server) server.kill(0);
+  }
+
+  return {
+    writeBundle() {
+      if (server) return;
+      server = require('child_process').spawn('npm', ['run', 'start:server'], {
+        stdio: ['ignore', 'inherit', 'inherit'],
+        shell: true,
+      });
+
+      process.on('SIGTERM', toExit);
+      process.on('exit', toExit);
+    },
+  };
+}
+
+function html({ title, meta }) {
+  const themeDirrectory = path.join('src', 'client', 'assets');
+  const themes = fs.readdirSync(themeDirrectory);
+  return {
+    name: 'html',
+    buildStart(outputOptions, bundle) {
+      themes.forEach((theme) => {
+        this.emitFile({
+          type: 'asset',
+          fileName: theme,
+          source: fs.readFileSync(path.join(themeDirrectory, theme)).toString(),
+        });
+      });
+    },
+    generateBundle() {
+      this.emitFile({
+        type: 'asset',
+        fileName: 'index.html',
+        source: `
+        <!DOCTYPE html>
+        <html lang="en">
+          <head>
+            ${meta.map((x) => `<meta ${x.property}="${x.value}">`).join('\n')}
+            <title>${title}</title>
+            <link href="bundle.css" rel="stylesheet">
+            <link href="dark.theme.css" rel="stylesheet" media="(prefers-color-scheme: dark)">
+            <link href="light.theme.css" rel="stylesheet" media="(prefers-color-scheme: light)">
+          </head>
+          <body>
+            <script src="bundle.js"></script>
+          </body>
+        </html>
+        `,
+      });
+    },
+  };
+}
 
 export default {
   input: 'src/client/main.ts',
@@ -15,25 +77,23 @@ export default {
     sourcemap: true,
     format: 'iife',
     name: 'app',
-    file: 'public/build/bundle.js',
+    file: 'public/bundle.js',
   },
   plugins: [
     svelte({
       preprocess: sveltePreprocess({ sourceMap: !production }),
       compilerOptions: {
-        // enable run-time checks when not in production
         dev: !production,
       },
     }),
-    // we'll extract any component CSS out into
-    // a separate file - better for performance
-    css({ output: 'bundle.css' }),
-
-    // If you have external dependencies installed from
-    // npm, you'll most likely need these plugins. In
-    // some cases you'll need additional configuration -
-    // consult the documentation for details:
-    // https://github.com/rollup/plugins/tree/master/packages/commonjs
+    css({ exclude: ['**/assets'], output: 'bundle.css' }),
+    html({
+      title: 'SSE',
+      meta: [
+        { property: 'charset', value: 'utf-8' },
+        { property: 'color-scheme', value: 'light dark' },
+      ],
+    }),
     resolve({
       browser: true,
       dedupe: ['svelte'],
@@ -43,11 +103,22 @@ export default {
       sourceMap: !production,
       inlineSources: !production,
     }),
-    html({
-      title: 'SSE'
-    }),
+
+    !production && serve(),
+    !production &&
+      livereload({
+        watch: 'public/**',
+        delay: 1000,
+        https: {
+          key: fs.readFileSync('localhost-privkey.pem'),
+          cert: fs.readFileSync('localhost-cert.pem'),
+        },
+      }),
+    production && terser(),
   ],
   watch: {
+    exclude: 'node_modules/**',
+    include: 'src/**',
     clearScreen: false,
   },
 };

@@ -40,6 +40,19 @@ function putTransactions(props: ServerRouteProps) {
           return console.log(err.message);
         }
         console.log(`Row(s) updated: ${this.changes}`);
+
+        db.run(
+          `DELETE FROM ${process.env.PORTFOLIOS_TRANSACTIONS_DB} WHERE transactionId = ?`,
+          [transaction.id]
+        );
+
+        if (transaction.portfolioId) {
+          db.run(
+            `INSERT INTO ${process.env.PORTFOLIOS_TRANSACTIONS_DB} (portfolioId, transactionId) VALUES (?, ?)`,
+            [transaction.portfolioId, transaction.id]
+          );
+        }
+
         stream.respond({
           ':status': constants.HTTP_STATUS_OK,
         });

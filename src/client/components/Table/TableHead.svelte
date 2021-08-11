@@ -33,7 +33,6 @@
   $: options = Array.from(new Set(filterValues));
   $: selected = $filter[head.key] || [];
   $: isActive = $filter[head.key]?.length;
-
 </script>
 
 <th>
@@ -53,11 +52,11 @@
     {head.title}
   {/if}
   {#if head.sorted}
-    <button on:click={handleSort}>
+    <button class="head-sort-button" on:click={handleSort}>
       {#if $sort.key === head.key}
-        {$sort.type === TABLE_SORT_TYPE.ASC ? 'ASC' : 'DESC'}
+        {$sort.type === TABLE_SORT_TYPE.ASC ? '∧' : '∨'}
       {:else}
-        SORT
+        =
       {/if}
     </button>
   {/if}
@@ -75,6 +74,13 @@
     border: none;
     margin: 0;
     padding: 0;
+  }
+
+  .head-sort-button {
+    border-radius: 50%;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
   }
 
   .head-filter--active {

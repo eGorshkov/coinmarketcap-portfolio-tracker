@@ -1,5 +1,6 @@
-import type { Active, Transaction } from '../../common/types';
+import type { Active, Portfolio, Transaction } from '../../common/types';
 
+//#region PORTFOLIOS
 export async function postTransaction(transaction: Transaction) {
   return fetch('https://localhost:5000/transactions', {
     method: 'POST',
@@ -21,19 +22,51 @@ export async function deleteTransaction(transaction: Transaction) {
   });
 }
 
-export function getTransactions(activityId?: number) {
-  const urlParams = activityId ? `?activityId=${activityId}` : '';
-  return fetch(`https://localhost:5000/transactions${urlParams}`).then(
+export function getTransactions(cfg?: {
+  activityId?: number;
+  portfolioId?: number;
+}): Promise<Transaction[]> {
+  let urlParams = cfg
+    ? Object.keys(cfg)
+        .map((key) => cfg[key] && `${key}=${cfg[key]}`)
+        .filter(Boolean)
+        .join('&')
+    : '';
+  console.log('urlParams', urlParams);
+
+  return fetch(
+    `https://localhost:5000/transactions${urlParams && '?' + urlParams}`
+  )
+    .then((response: any) => response.json())
+    .then((transactions) =>
+      transactions.map((x) => ({
+        ...x,
+        date: new Date(x.date),
+      }))
+    );
+}
+//#endregion
+
+//#region ACTIVES
+export async function getActives(
+  portfolioId?: number | null
+): Promise<Active[]> {
+  let urlParams = '';
+  portfolioId && (urlParams += `?portfolioId=${portfolioId}`);
+  console.log('urlParams', urlParams);
+  return await fetch(`https://localhost:5000/actives${urlParams}`).then(
     (response: any) => response.json()
   );
 }
 
-export async function getActives() {
-  return await fetch('https://localhost:5000/actives').then((response: any) =>
-    response.json()
+export async function getActiveRisks() {
+  return await fetch('https://localhost:5000/actives/get-risks').then(
+    (response: any) => response.json()
   );
 }
+//#endregion
 
+//#region RISKS
 export async function getRisks() {
   return await fetch('https://localhost:5000/risks').then((response: any) =>
     response.json()
@@ -46,9 +79,33 @@ export async function postRisks(data) {
     body: JSON.stringify(data),
   });
 }
+//#endregion
 
-export async function getActiveRisks() {
-  return await fetch('https://localhost:5000/actives/get-risks').then(
+//#region PORTFOLIOS
+export async function getPortfolios(): Promise<Portfolio[]> {
+  return await fetch('https://localhost:5000/portfolios').then(
     (response: any) => response.json()
   );
 }
+export async function postPortfolios(data) {
+  return await fetch('https://localhost:5000/portfolios', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function putPortfolios(portfolio: Portfolio) {
+  return fetch('https://localhost:5000/portfolios', {
+    method: 'PUT',
+    body: JSON.stringify(portfolio),
+  });
+}
+
+export async function deletePortfolios(portfolio: Portfolio) {
+  return fetch('https://localhost:5000/portfolios', {
+    method: 'DELETE',
+    body: JSON.stringify(portfolio),
+  });
+}
+
+//#endregion

@@ -9,7 +9,7 @@ function create(overlayId: string, closeCb?: () => void, darkTheme?: boolean) {
   const overlayContainer = document.getElementById(OVERLAY_CONTAINER_ID);
   const overlay = document.createElement('div');
   overlay.className = 'ui-overlay';
-  darkTheme && overlay.classList.add('ui-overlay--dark');
+  darkTheme && overlay.classList.add('ui-overlay--active');
   if (!OVERLAYS.length) document.body.classList.add('hidden');
   OVERLAYS.push(overlayId);
   overlay.setAttribute('id', OVERLAY_BACKGROUND_ID + '-' + overlayId);

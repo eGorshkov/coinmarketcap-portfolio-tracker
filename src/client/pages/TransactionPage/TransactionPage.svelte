@@ -10,6 +10,8 @@
     prices,
     transactions,
     getTransactions,
+    portfolios,
+selectedPortfolioId
   } from '../../stores';
 
   let config: TableConfigType<Transaction> = {
@@ -42,16 +44,35 @@
           _this: (row: Transaction) => row.date?.toLocaleString(),
         },
       },
+      {
+        title: 'Портфолио',
+        key: 'portfolioId',
+        onRendering: {
+          type: RENDERING_TYPE.TEXT,
+          _this: (row: Transaction) => $portfolios.find(x => x.id === row.portfolioId)?.name,
+        },
+      },
     ],
   };
 
   async function afterClosed() {
-    const _transactions = await getTransactions();
+    const _transactions = await getTransactions({
+      portfolioId: $selectedPortfolioId
+    });
 
     transactions.set(_transactions);
     prices.set(createPrices(_transactions, $prices));
   }
 </script>
 
-<button use:modal={{ cnt: TransactionForm, afterClosed }}>Add</button>
-<Table {config} values={$transactions} tableName="transaction" />
+<div class="transaction-page">
+  <button use:modal={{ cnt: TransactionForm, afterClosed }}>Add</button>
+  <Table {config} values={$transactions} tableName="transaction" />
+</div>
+
+<style>
+  .transaction-page :global(table td) {
+    height: 50px;
+    vertical-align: middle;
+  }
+</style>

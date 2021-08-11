@@ -13,9 +13,9 @@
   $: othersPerceent = others.reduce((sum, x) => (sum += percent(x)), 0);
 </script>
 
-{#if othersPerceent}
-  <div class="chart">
-    {#each [first, second, third, four] as item}
+<div class="chart">
+  {#each [first, second, third, four] as item}
+    {#if item}
       <div
         class="chart-item"
         data-symbol="{item.coinSymbol} {percent(item)}%"
@@ -23,14 +23,18 @@
       >
         <span class="chart-item--dot">●</span>
       </div>
-    {/each}
+    {/if}
+  {/each}
+  {#if othersPerceent}
     <div
       class="chart-item"
       data-symbol="Другие {othersPerceent}%"
       style="width: {othersPerceent}%"
-    />
-  </div>
-{/if}
+    >
+      <span class="chart-item--dot">●</span>
+    </div>
+  {/if}
+</div>
 
 <style>
   .chart {

@@ -1,12 +1,14 @@
 <script lang="ts">
+  import type { TableConfigType, Active } from '../../../common/types';
+  
   import { actives, balance } from '../../stores';
   import { RENDERING_TYPE } from '../../../common/types';
-  import type { TableConfigType, Active } from '../../../common/types';
+  import PortfolioPage from '../PortfolioPage/PortfolioPage.svelte';
+  import Table from '../../components/Table/Table.svelte';
   import ActivesPagePrice from './ActivesPagePrice.svelte';
   import ActivesPagePlusMinus from './ActivesPagePlusMinus.svelte';
   import ActivesPageAllocation from './ActivesPageAllocation.svelte';
   import ActivesPageInformation from './ActivesPageInformation.svelte';
-  import Table from '../../components/Table/Table.svelte';
   import ActivesPageEdit from './ActivesPageEdit.svelte';
   const config: TableConfigType<Active> = {
     edited: ActivesPageEdit,
@@ -62,11 +64,19 @@
 <button on:click={() => (activeTab = 'information')}>Information</button>
 <button on:click={() => (activeTab = 'allocation')}>Allocation</button>
 <svelte:component this={tabs[activeTab]} />
-<Table {config} values={$actives} tableName="actives" />
+<div class="actives-container">
+  <PortfolioPage />
+  <Table {config} values={$actives} tableName="actives" />
+</div>
 
 <style>
   h6,
   h1 {
     margin: 0;
+  }
+
+  .actives-container {
+    display: grid;
+    grid-template-columns: 30% 1fr;
   }
 </style>

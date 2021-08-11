@@ -18,3 +18,8 @@ export enum TABLE_SORT_TYPE {
   ASC = 'ASC',
   DESC = 'DESC',
 }
+
+export enum PORTFOLIO_FORM_ACTION {
+  ADD = 'add',
+  REMOVE = 'remove',
+}

@@ -8,7 +8,6 @@
   export let getLabel;
 
   function handleClick() {
-    console.log('option onClick', option);
     itemClick(option);
   }
 
@@ -34,7 +33,7 @@
     height: 42px;
     text-align: left;
     cursor: pointer;
-    background-color: white;
+    background-color: var(--theme-bg-color);
   }
 
   button:focus {

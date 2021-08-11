@@ -1,6 +1,6 @@
 import { writable, derived } from 'svelte/store';
 import { TABLE_SORT_TYPE } from '../../constants/common';
-import type { TableFilter, TableSort } from '../../../common/types;;
+import type { TableFilter, TableSort } from '../../../common/types';
 import useFilter from './useFilter';
 
 export const data = writable([]);

@@ -1,38 +1,46 @@
-<script>
-  import { beforeUpdate } from 'svelte';
+<script lang="ts">
+  import type { Transaction } from '../../../common/types';
+  import Select from '../../components/Select/Select.svelte';
 
   import { TRANSACTION_TYPE } from '../../constants/common';
-  import { postTransaction, putTransaction } from '../../stores';
+  import { portfolios, postTransaction, putTransaction } from '../../stores';
 
-  export let data = {
+  export let data: Transaction = {
     coinSymbol: '',
     coinPrice: 0,
     count: 0,
-    date: new Date().toISOString().slice(0, 16),
+    date: new Date(),
     id: 0,
+    portfolioId: null,
+    type: TRANSACTION_TYPE.BUY,
   };
   export let onClose;
 
   function newItem() {
     return {
       ...data,
-      date: new Date(data.date),
+      date: new Date(_date),
       type: TRANSACTION_TYPE.BUY,
     };
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
-    data.id ? await putTransaction(data) : await postTransaction(newItem(data));
+    data.id ? await putTransaction(data) : await postTransaction(newItem());
     onClose();
   }
 
-  beforeUpdate(() => {
-    data = {
-      ...data,
-      date: new Date(data.date).toISOString().slice(0, 16),
-    };
-  });
+  function handlePortfolioChange([row]) {
+    data.portfolioId = row.id;
+  }
+
+  function handleDateChange(e) {
+    console.log(e);
+    data.date = new Date(e.target.value);
+  }
+
+  $: _date = data.date?.toISOString().slice(0, 16) || ''
+  $: selectedPortfolio = $portfolios.find(x => x.id === data.portfolioId)?.name || '';
 </script>
 
 <div class="transaction-form-container">
@@ -70,15 +78,26 @@
     <div class="transaction-form--date">
       <label for="date">Дата</label>
       <input
-        bind:value={data.date}
+        bind:value={_date}
+        on:change={handleDateChange}
         type="datetime-local"
         id="date"
         name="date"
       />
     </div>
+    <div class="transaction-form--date">
+      <label for="portflio">Портфолио</label>
+      <Select
+        getLabel={(row) => row.name}
+        selected={selectedPortfolio}
+        isSelected={(row) => row.id === data.portfolioId}
+        onSelect={handlePortfolioChange}
+        options={$portfolios}
+      />
+    </div>
     <div class="transaction-form--value">
-      <label>Общий расход</label>
-      <span>${data.count * data.coinPrice}</span>
+      Общий расход
+      <span>${Number(data.count * +data.coinPrice).toFixed(2)}</span>
     </div>
     <button type="submit" class="transaction-form--button">
       {data.id ? 'Изменить транзакцию' : 'Добавить транзакцию'}
@@ -90,7 +109,7 @@
   .transaction-form-container {
     padding: 15px;
     border-radius: 8px;
-    background-color: white;
+    background-color: var(--theme-bg-color);
     box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.7);
   }
   form {

@@ -50,7 +50,7 @@
     padding: 0.4em;
     text-align: left;
     background-color: transparent;
-    border: 1px solid rgba(0, 0, 0, 0.7);
+    border: 1px solid;
     border-radius: 2px;
     cursor: pointer;
     overflow: hidden;
@@ -61,7 +61,7 @@
 
   ui-select:focus {
     outline: none;
-    border: 1px solid rgba(0, 0, 0, 0.9);
-    box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.9);
+    border: 1px solid tomato;
+    box-shadow: 0 0 2px 0 tomato;
   }
 </style>

@@ -13,8 +13,8 @@ async function postTransactions(props: ServerRouteProps) {
   getBufferData(stream, headers, (data) => {
     if (!data) return;
     const transaction = JSON.parse(data) as Transaction;
-    db.run(
-      SQL_REQUEST,
+    let statement = db.prepare(SQL_REQUEST);
+    statement.run(
       [
         transaction.coinPrice,
         transaction.count,
@@ -22,7 +22,7 @@ async function postTransactions(props: ServerRouteProps) {
         transaction.date,
         transaction.type,
       ],
-      (err, data) => {
+      function (err) {
         if (err) {
           stream.respond({
             ':status': constants.HTTP_STATUS_BAD_REQUEST,
@@ -30,13 +30,23 @@ async function postTransactions(props: ServerRouteProps) {
           stream.end(err.message);
           return console.log(err.message);
         }
+
+        if (transaction.portfolioId) {
+          db.run(
+            `INSERT INTO ${process.env.PORTFOLIOS_TRANSACTIONS_DB} (portfolioId, transactionId) VALUES (?, ?)`,
+            [transaction.portfolioId, statement.lastID]
+          );
+        }
+
         stream.respond({
           ':status': constants.HTTP_STATUS_OK,
         });
         stream.end('ok');
-        db.close();
       }
     );
+
+    statement.finalize();
+    db.close();
   });
 }
 

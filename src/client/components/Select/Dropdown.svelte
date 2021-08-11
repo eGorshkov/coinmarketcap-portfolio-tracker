@@ -86,7 +86,7 @@
   .dropdown-container {
     height: 200px;
     width: 200px;
-    background-color: white;
+    background-color: var(--theme-bg-color);
     overflow: auto;
     position: fixed;
     box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.7);

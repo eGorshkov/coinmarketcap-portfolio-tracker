@@ -48,7 +48,7 @@
   .risk-form-container {
     width: 250px;
     border-radius: 8px;
-    background-color: white;
+    background-color: var(--theme-bg-color);
     box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.7);
     max-height: 500px;
     overflow: auto;
@@ -58,7 +58,7 @@
     top: 0;
     grid-column: span 2;
     width: 100%;
-    background-color: white;
+    background-color: var(--theme-bg-color);
   }
   form {
     display: grid;

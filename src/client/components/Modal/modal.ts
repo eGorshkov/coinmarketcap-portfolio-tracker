@@ -1,7 +1,7 @@
 import ui from '../ui';
 import { OVERLAY_CONTAINER_ID } from '../../constants/ui';
 import Modal from './Modal.svelte';
-import type { ModalType } from '../../../common/types;;
+import type { ModalType } from '../../../common/types';
 
 function modal(node, options: ModalType) {
   const overlayContainer = document.getElementById(OVERLAY_CONTAINER_ID);

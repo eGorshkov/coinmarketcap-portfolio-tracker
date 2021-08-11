@@ -18,6 +18,8 @@ export type Transaction = {
   date: Date;
   coinSymbol: Coin['symbol'];
   coinPrice: Coin['price'];
+
+  portfolioId: Portfolio['id'] | null;
 };
 
 export type Active = Pick<Transaction, 'id' | 'count' | 'coinSymbol'> & {
@@ -106,4 +108,10 @@ export type ServerRouteProps = {
   sse: SSE;
   stream: ServerHttp2Stream;
   headers: IncomingHttpHeaders;
+};
+
+export type Portfolio = {
+  id: number;
+  name: string;
+  selected: boolean;
 };
