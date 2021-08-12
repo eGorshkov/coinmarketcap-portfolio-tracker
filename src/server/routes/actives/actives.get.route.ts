@@ -4,7 +4,7 @@ import { SQLITE_DIR } from '../../constants';
 import type { ServerRouteProps } from '../../../common/types';
 
 function getActives(props: ServerRouteProps) {
-  const { url, stream } = props;
+  const { url, stream, headers, cookie } = props;
   const portfolioId = url.searchParams.has('portfolioId')
     ? +url.searchParams.get('portfolioId')
     : null;
@@ -23,10 +23,13 @@ function getActives(props: ServerRouteProps) {
     FROM
       ${process.env.ACTIVES_DB} ac, 
       ${process.env.ACTIVES_TRANSASCTIONS_DB} atc, 
-      ${process.env.TRANSACTIONS_DB} tr
+      ${process.env.TRANSACTIONS_DB} tr,
+      ${process.env.USERS_TRANSACTIONS_DB} ut
 
     WHERE ac.id == atc.activityId
       AND tr.id == atc.transactionId
+	    AND tr.id == ut.transactionId
+      AND ut.userId == (SELECT id FROM Users WHERE uuid == IFNULL(?, ""))
       
     GROUP BY atc.activityId`,
     portfolioId && `HAVING instr(portfolioIds, ${portfolioId}) > 0`,
@@ -37,7 +40,7 @@ function getActives(props: ServerRouteProps) {
 
   const db = new sqlite3.Database(SQLITE_DIR);
 
-  db.all(SQL_REQUEST_ALL_ACTIVES, [], (err, data) => {
+  db.all(SQL_REQUEST_ALL_ACTIVES, [cookie.uuid], (err, data) => {
     if (err) {
       stream.respond({
         ':status': constants.HTTP_STATUS_BAD_REQUEST,

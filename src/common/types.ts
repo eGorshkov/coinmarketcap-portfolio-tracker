@@ -108,10 +108,16 @@ export type ServerRouteProps = {
   sse: SSE;
   stream: ServerHttp2Stream;
   headers: IncomingHttpHeaders;
+  cookie: { [k in string]: string };
 };
 
 export type Portfolio = {
   id: number;
   name: string;
   selected: boolean;
+};
+
+export type User = {
+  login: string;
+  id: string;
 };

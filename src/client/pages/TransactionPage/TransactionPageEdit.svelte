@@ -8,7 +8,7 @@
     transactions,
     getTransactions,
     deleteTransaction,
-    selectedPortfolioId,
+    currentPortfolioId,
   } from '../../stores';
 
   export let row: Transaction;
@@ -20,7 +20,7 @@
 
   async function updateTransactions() {
     const _transactions = await getTransactions({
-      portfolioId: $selectedPortfolioId,
+      portfolioId: $currentPortfolioId,
     });
 
     transactions.set(_transactions);

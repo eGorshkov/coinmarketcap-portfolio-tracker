@@ -5,6 +5,10 @@ import PricesRouter from './prices';
 import TransactionsRouter from './transactions';
 import RisksRouter from './risks';
 import PortfoliosRouter from './portfolios';
+import UsersRouter from './users';
+import userLogin from './users/user-login.post.route';
+import userLogout from './users/user-logout.get.route';
+import getUserInfo from './users/user-info.get.route';
 
 const routes = {
   '/actives': new ActivesRouter(),
@@ -13,6 +17,10 @@ const routes = {
   '/transactions': new TransactionsRouter(),
   '/risks': new RisksRouter(),
   '/portfolios': new PortfoliosRouter(),
+  '/users': new UsersRouter(),
+  '/users/login': Route.of('POST', userLogin),
+  '/users/logout': Route.of('GET', userLogout),
+  '/users/info': Route.of('GET', getUserInfo),
 };
 
 export default routes;

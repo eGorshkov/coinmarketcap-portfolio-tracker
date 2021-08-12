@@ -5,6 +5,7 @@ import { SSE } from './sse/sse';
 
 import responseStatic from './responseStatic';
 import routes from './routes';
+import getCookieAsObject from './helpers/getCookieAsObject';
 
 config({ path: '.env' });
 
@@ -27,17 +28,18 @@ server.on('stream', (stream, headers) => {
   const urlPath = headers[HTTP2_HEADER_PATH];
   //@ts-ignore
   const url: URL = new URL(`${scheme}://${authority}${urlPath}`);
+  const cookie = getCookieAsObject(headers.cookie);
 
   if (url.pathname === '/stream') {
     sse.init(stream, headers);
     const route = routes['/prices'];
-    route && route.call(url, sse, stream, headers);
+    route && route.call(url, sse, stream, headers, cookie);
     return;
   }
 
   if (routes[url.pathname]) {
     const route = routes[url.pathname];
-    route && route.call(url, sse, stream, headers);
+    route && route.call(url, sse, stream, headers, cookie);
     return;
   }
 });

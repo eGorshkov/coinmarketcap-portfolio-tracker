@@ -16,11 +16,12 @@ class Route {
     url: URL,
     sse: SSE,
     stream: ServerHttp2Stream,
-    headers: IncomingHttpHeaders
+    headers: IncomingHttpHeaders,
+    cookie: { [k in string]: string }
   ) {
     const method = headers[':method'] || HTTP2_METHOD_GET;
     try {
-      this[method]({ url, sse, stream, headers });
+      this[method]({ url, sse, stream, headers, cookie });
     } catch (err) {
       stream.respond({
         ':status': constants.HTTP_STATUS_BAD_REQUEST,

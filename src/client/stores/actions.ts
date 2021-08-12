@@ -1,4 +1,4 @@
-import type { Active, Portfolio, Transaction } from '../../common/types';
+import type { Active, Portfolio, Transaction, User } from '../../common/types';
 
 //#region PORTFOLIOS
 export async function postTransaction(transaction: Transaction) {
@@ -106,6 +106,35 @@ export async function deletePortfolios(portfolio: Portfolio) {
     method: 'DELETE',
     body: JSON.stringify(portfolio),
   });
+}
+
+//#endregion
+
+//#region USERS
+export async function loginUser(props: {
+  login: string;
+  password: string;
+}): Promise<any> {
+  return await fetch('https://localhost:5000/users/login', {
+    method: 'POST',
+    body: JSON.stringify(props),
+  }).then((response) => response.json());
+}
+
+export async function logoutUser(): Promise<any> {
+  return await fetch('https://localhost:5000/users/logout');
+}
+
+export async function getUserData(): Promise<any> {
+  return await fetch('https://localhost:5000/users/info').then((response) =>
+    response.json()
+  );
+}
+
+export async function getUsers(): Promise<any> {
+  return await fetch('https://localhost:5000/users').then((response) =>
+    response.json()
+  );
 }
 
 //#endregion

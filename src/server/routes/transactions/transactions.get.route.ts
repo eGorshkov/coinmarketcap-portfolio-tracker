@@ -4,9 +4,9 @@ import { SQLITE_DIR } from '../../constants';
 import type { ServerRouteProps } from '../../../common/types';
 
 function getTransactions(props: ServerRouteProps) {
-  const { url, stream } = props;
-
+  const { url, stream, cookie } = props;
   const db = new sqlite3.Database(SQLITE_DIR);
+
   const activityId = url.searchParams.has('activityId')
     ? +url.searchParams.get('activityId')
     : null;
@@ -18,8 +18,10 @@ function getTransactions(props: ServerRouteProps) {
     `SELECT 
     tr.*,
     (SELECT ptc.portfolioId  FROM ${process.env.PORTFOLIOS_TRANSACTIONS_DB} ptc WHERE ptc.transactionId = tr.id) as portfolioId
-    FROM ${process.env.TRANSACTIONS_DB} tr, ${process.env.ACTIVES_TRANSASCTIONS_DB} actr
-    WHERE 1 AND actr.transactionId == tr.id`,
+    FROM ${process.env.TRANSACTIONS_DB} tr, ${process.env.ACTIVES_TRANSASCTIONS_DB} actr, ${process.env.USERS_TRANSACTIONS_DB} ut
+    WHERE ut.transactionId == tr.id
+		  AND ut.userId == (SELECT id FROM Users WHERE uuid == IFNULL(?, ""))
+      AND actr.transactionId == tr.id`,
     activityId && ' AND actr.activityId == ?',
     portfolioId && ' AND portfolioId == ?',
   ]
@@ -28,7 +30,9 @@ function getTransactions(props: ServerRouteProps) {
 
   db.all(
     SQL_REQUEST_TRANSACTIONS,
-    [activityId, portfolioId].filter(Boolean),
+    [cookie.uuid].concat(
+      [activityId, portfolioId].filter(Boolean).map((x) => x.toString())
+    ),
     (err, data) => {
       if (err) {
         stream.respond({

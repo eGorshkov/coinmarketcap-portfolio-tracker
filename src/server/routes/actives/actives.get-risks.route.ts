@@ -7,7 +7,7 @@ function getActivesRisks(props: ServerRouteProps) {
   const { stream } = props;
   const SQL_REQUEST = `SELECT a.id, a.symbol,
     (SELECT ar.riskId  FROM ${process.env.ACTIVES_RISKS_DB} ar WHERE ar.activeId = a.id) as riskId,
-	(SELECT r.value  FROM ${process.env.ACTIVES_RISKS_DB} ar, ${process.env.RISKS_DB} r WHERE ar.activeId = a.id AND ar.riskId == r.id) as riskType
+	  (SELECT r.value  FROM ${process.env.ACTIVES_RISKS_DB} ar, ${process.env.RISKS_DB} r WHERE ar.activeId = a.id AND ar.riskId == r.id) as riskType
 	FROM ${process.env.ACTIVES_DB} a`;
   const db = new sqlite3.Database(SQLITE_DIR);
 

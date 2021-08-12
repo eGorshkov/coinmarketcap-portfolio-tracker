@@ -3,16 +3,14 @@ import sqlite3 from 'sqlite3';
 import { SQLITE_DIR } from '../../constants';
 import type { ServerRouteProps } from '../../../common/types';
 
-function getPortfolios(props: ServerRouteProps) {
-  const { stream, cookie } = props;
-  const SQL_REQUEST_PORTFOLIOS = `SELECT p.*
-    FROM ${process.env.PORTFOLIOS_DB} p, ${process.env.USERS_PORTFOLIOS_DB} up
-	  WHERE up.portfolioId == p.id
-      AND up.userId == (SELECT id FROM Users WHERE uuid = ?)`;
-
+function getUsers(props: ServerRouteProps) {
+  const { url, stream, headers } = props;
   const db = new sqlite3.Database(SQLITE_DIR);
+  const SQL_REQUEST_USERS = `SELECT 
+    *,
+    (SELECT ptc.portfolioId  FROM ${process.env.USERS_DB}`;
 
-  db.all(SQL_REQUEST_PORTFOLIOS, [cookie.uuid], (err, data) => {
+  db.all(SQL_REQUEST_USERS, [], (err, data) => {
     if (err) {
       stream.respond({
         ':status': constants.HTTP_STATUS_BAD_REQUEST,
@@ -25,8 +23,9 @@ function getPortfolios(props: ServerRouteProps) {
       ':status': constants.HTTP_STATUS_OK,
     });
     stream.end(JSON.stringify(data));
-    db.close();
   });
+
+  db.close();
 }
 
-export default getPortfolios;
+export default getUsers;

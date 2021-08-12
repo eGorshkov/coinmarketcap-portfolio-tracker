@@ -11,7 +11,7 @@
     transactions,
     getTransactions,
     portfolios,
-selectedPortfolioId
+currentPortfolioId
   } from '../../stores';
 
   let config: TableConfigType<Transaction> = {
@@ -57,7 +57,7 @@ selectedPortfolioId
 
   async function afterClosed() {
     const _transactions = await getTransactions({
-      portfolioId: $selectedPortfolioId
+      portfolioId: $currentPortfolioId
     });
 
     transactions.set(_transactions);

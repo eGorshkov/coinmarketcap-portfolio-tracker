@@ -5,7 +5,7 @@
   import { PORTFOLIO_FORM_ACTION } from '../../constants/common';
 
   import {
-    selectedPortfolioId,
+    currentPortfolioId,
     deletePortfolios,
     getPortfolios,
     portfolios,
@@ -16,9 +16,9 @@
 
   function handleClickPortfolio(portfolio?: Portfolio) {
     return () => {
-      if (!portfolio) selectedPortfolioId.set(null);
+      if (!portfolio) currentPortfolioId.set(null);
 
-      selectedPortfolioId.update((state) => {
+      currentPortfolioId.update((state) => {
         if (state === portfolio.id) return null;
         return portfolio.id;
       });
@@ -48,7 +48,7 @@
 <div class="portfolios-container">
   <div class="portfolio-item">
     <button
-      class="portfolio-add-button {$selectedPortfolioId === null &&
+      class="portfolio-add-button {$currentPortfolioId === null &&
         'portfolio-item--active'}"
       on:click={handleClickPortfolio()}
     >
@@ -62,7 +62,7 @@
   <div class="portfolios-item-container">
     {#each $portfolios as portfolio}
       <div
-        class="portfolio-item {$selectedPortfolioId === portfolio.id &&
+        class="portfolio-item {$currentPortfolioId === portfolio.id &&
           'portfolio-item--active'}"
       >
         <button

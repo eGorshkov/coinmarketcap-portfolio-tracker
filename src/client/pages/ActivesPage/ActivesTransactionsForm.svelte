@@ -2,13 +2,13 @@
   import Table from '../../components/Table/Table.svelte';
   import type { Active, Transaction } from '../../../common/types';
   import { onMount } from 'svelte';
-  import { getTransactions, portfolios, selectedPortfolioId } from '../../stores';
+  import { getTransactions, portfolios, currentPortfolioId } from '../../stores';
   export let data: Active;
   let transactions: Transaction[] = [];
   onMount(async () => {
     transactions = await getTransactions({
       activityId: data.id,
-      portfolioId: $selectedPortfolioId
+      portfolioId: $currentPortfolioId
     });
   });
 </script>

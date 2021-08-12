@@ -5,7 +5,7 @@ import { getBufferData } from '../../helpers';
 import type { ServerRouteProps, Transaction } from '../../../common/types';
 
 async function postTransactions(props: ServerRouteProps) {
-  const { stream, headers } = props;
+  const { stream, headers, cookie } = props;
   const SQL_REQUEST = `INSERT INTO ${process.env.TRANSACTIONS_DB} (coinPrice, count,  coinSymbol,  date,  type)
 	VALUES (?, ?, ?, ?, ?)`;
   const db = new sqlite3.Database(SQLITE_DIR);
@@ -37,6 +37,11 @@ async function postTransactions(props: ServerRouteProps) {
             [transaction.portfolioId, statement.lastID]
           );
         }
+
+        db.run(
+          `INSERT INTO ${process.env.USERS_TRANSACTIONS_DB} (userId, transactionId) VALUES ((SELECT id FROM ${process.env.USERS_DB} WHERE uuid = ?), ?)`,
+          [cookie.uuid, statement.lastID]
+        );
 
         stream.respond({
           ':status': constants.HTTP_STATUS_OK,

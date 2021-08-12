@@ -8,7 +8,9 @@ export const prices = writable<{ [key: string]: number | string | null }>({});
 export const actives = writable<Active[]>([]);
 
 export const portfolios = writable<Portfolio[]>([]);
-export const selectedPortfolioId = writable<Portfolio['id'] | null>(null);
+export const currentPortfolioId = writable<Portfolio['id'] | null>(null);
+
+export const user = writable(null);
 
 export const total = derived(
   actives,
