@@ -4,4 +4,3 @@ dist
 .idea
 public
 .clinic
-__sqlite-data/data.db

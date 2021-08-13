@@ -16,6 +16,7 @@ const server = http2.createSecureServer(
   {
     key: fs.readFileSync('localhost-privkey.pem'),
     cert: fs.readFileSync('localhost-cert.pem'),
+    allowHTTP1: true,
   },
   responseStatic
 );
@@ -45,6 +46,7 @@ server.on('stream', (stream, headers) => {
 });
 
 server.listen(process.env.PORT, () => {
+  ca;
   console.log(`Server started on ${process.env.PORT}`);
   console.log(fs.readFileSync('.env').toString());
 });

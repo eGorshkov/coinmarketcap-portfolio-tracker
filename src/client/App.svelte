@@ -55,7 +55,7 @@
   }
 
   onMount(async () => {
-    sse = new EventSource('https://localhost:5000/stream');
+    sse = new EventSource('/stream');
 
     sse.addEventListener('get-prices', (e) => {
       const _prices = JSON.parse(e.data);
