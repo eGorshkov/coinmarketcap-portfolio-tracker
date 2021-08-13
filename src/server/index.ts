@@ -46,7 +46,6 @@ server.on('stream', (stream, headers) => {
 });
 
 server.listen(process.env.PORT, () => {
-  ca;
   console.log(`Server started on ${process.env.PORT}`);
   console.log(fs.readFileSync('.env').toString());
 });
