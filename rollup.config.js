@@ -41,7 +41,7 @@ function html({ title, meta }) {
       themes.forEach((theme) => {
         this.emitFile({
           type: 'asset',
-          fileName: theme,
+          fileName: `assets/${theme}`,
           source: fs.readFileSync(path.join(themeDirrectory, theme)).toString(),
         });
       });
@@ -57,8 +57,8 @@ function html({ title, meta }) {
             ${meta.map((x) => `<meta ${x.property}="${x.value}">`).join('\n')}
             <title>${title}</title>
             <link href="bundle.css" rel="stylesheet">
-            <link href="dark.theme.css" rel="stylesheet" media="(prefers-color-scheme: dark)">
-            <link href="light.theme.css" rel="stylesheet" media="(prefers-color-scheme: light)">
+            <link href="assets/dark.theme.css" rel="stylesheet" media="(prefers-color-scheme: dark)">
+            <link href="assets/light.theme.css" rel="stylesheet" media="(prefers-color-scheme: light)">
           </head>
           <body>
             <script src="bundle.js"></script>
@@ -122,15 +122,15 @@ export default [
       clearScreen: false,
     },
   },
-  {
-    input: 'src/server/index.ts',
-    plugins: [
-      typescript({ lib: ['es5', 'es6', 'dom'], target: 'es5' }),
-      commonjs(),
-    ],
-    output: {
-      file: 'public/server/node.js',
-      format: 'es',
-    },
-  },
+  // {
+  //   input: 'src/server/index.ts',
+  //   plugins: [
+  //     typescript({ lib: ['es5', 'es6', 'dom'], target: 'es5' }),
+  //     commonjs(),
+  //   ],
+  //   output: {
+  //     file: 'public/server/node.js',
+  //     format: 'es',
+  //   },
+  // },
 ];

@@ -32,7 +32,7 @@ server.on('stream', (stream, headers) => {
 
   if (url.pathname === '/stream') {
     sse.init(stream, headers);
-    const route = routes['/prices'];
+    const route = routes['/api/prices'];
     route && route.call(url, sse, stream, headers, cookie);
     return;
   }
