@@ -11,12 +11,13 @@
     transactions,
     getTransactions,
     portfolios,
-currentPortfolioId
+    currentPortfolioId,
+    user,
   } from '../../stores';
 
   let config: TableConfigType<Transaction> = {
     ordered: true,
-    edited: TransactionPageEdit,
+    edited: { component: TransactionPageEdit, props: null },
     headers: [
       { title: 'Монета', key: 'coinSymbol', filtered: true },
       { title: 'Цена за монету', key: 'coinPrice', filtered: true },
@@ -49,7 +50,8 @@ currentPortfolioId
         key: 'portfolioId',
         onRendering: {
           type: RENDERING_TYPE.TEXT,
-          _this: (row: Transaction) => $portfolios.find(x => x.id === row.portfolioId)?.name,
+          _this: (row: Transaction) =>
+            $portfolios.find((x) => x.id === row.portfolioId)?.name,
         },
       },
     ],
@@ -57,16 +59,23 @@ currentPortfolioId
 
   async function afterClosed() {
     const _transactions = await getTransactions({
-      portfolioId: $currentPortfolioId
+      portfolioId: $currentPortfolioId,
     });
 
     transactions.set(_transactions);
     prices.set(createPrices(_transactions, $prices));
   }
+
+  async function checkRights() {
+    const rights = $user?.rights?.transactions;
+    config.edited.props = { rights };
+  }
+
+  $: $user, checkRights();
 </script>
 
 <div class="transaction-page">
-  <button use:modal={{ cnt: TransactionForm, afterClosed }}>Add</button>
+  <button disabled={!$user?.rights?.transactions?.canAdd} use:modal={{ cnt: TransactionForm, afterClosed }}>Add</button>
   <Table {config} values={$transactions} tableName="transaction" />
 </div>
 

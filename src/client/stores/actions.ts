@@ -1,6 +1,6 @@
 import type { Active, Portfolio, Transaction, User } from '../../common/types';
 
-//#region PORTFOLIOS
+//#region TRANSACTIONS
 export async function postTransaction(transaction: Transaction) {
   return fetch('https://localhost:5000/transactions', {
     method: 'POST',
@@ -45,6 +45,7 @@ export function getTransactions(cfg?: {
       }))
     );
 }
+
 //#endregion
 
 //#region ACTIVES
@@ -64,6 +65,7 @@ export async function getActiveRisks() {
     (response: any) => response.json()
   );
 }
+
 //#endregion
 
 //#region RISKS
@@ -87,6 +89,7 @@ export async function getPortfolios(): Promise<Portfolio[]> {
     (response: any) => response.json()
   );
 }
+
 export async function postPortfolios(data) {
   return await fetch('https://localhost:5000/portfolios', {
     method: 'POST',

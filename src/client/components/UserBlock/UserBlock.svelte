@@ -35,7 +35,7 @@
     <button on:click={handleLogout}>LOGOUT</button>
   {:else}
     <form on:submit={handleLogin}>
-      <input type="text" name="login" placeholder="Login..." />
+      <input type="text" name="login" placehoplder="Login..." />
       <input type="text" name="password" placeholder="Password..." />
       <button type="submit">LOGIN</button>
     </form>

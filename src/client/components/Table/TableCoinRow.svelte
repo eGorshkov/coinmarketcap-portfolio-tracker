@@ -29,7 +29,11 @@
 
   {#if config.edited}
     <td>
-      <svelte:component this={config.edited} {row} />
+      <svelte:component
+        this={config.edited.component}
+        props={config.edited.props}
+        {row}
+      />
     </td>
   {/if}
 </tr>

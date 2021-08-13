@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { TableConfigType, Active } from '../../../common/types';
-  
-  import { actives, balance } from '../../stores';
+
+  import { actives, balance, user } from '../../stores';
   import { RENDERING_TYPE } from '../../../common/types';
   import PortfolioPage from '../PortfolioPage/PortfolioPage.svelte';
   import Table from '../../components/Table/Table.svelte';
@@ -10,8 +10,9 @@
   import ActivesPageAllocation from './ActivesPageAllocation.svelte';
   import ActivesPageInformation from './ActivesPageInformation.svelte';
   import ActivesPageEdit from './ActivesPageEdit.svelte';
-  const config: TableConfigType<Active> = {
-    edited: ActivesPageEdit,
+
+  let config: TableConfigType<Active> = {
+    edited: { component: ActivesPageEdit, props: { rights: $user?.rights?.actives } },
     headers: [
       { title: 'Наименование', key: 'coinSymbol', filtered: true },
       {
@@ -56,6 +57,7 @@
   };
 
   let activeTab: keyof typeof tabs = 'information';
+
 </script>
 
 <h6>Текущий баланс</h6>
@@ -63,7 +65,7 @@
 
 <button on:click={() => (activeTab = 'information')}>Information</button>
 <button on:click={() => (activeTab = 'allocation')}>Allocation</button>
-<svelte:component this={tabs[activeTab]} />
+<svelte:component this={tabs[activeTab]} rights={$user?.rights?.actives} />
 <div class="actives-container">
   <PortfolioPage />
   <Table {config} values={$actives} tableName="actives" />

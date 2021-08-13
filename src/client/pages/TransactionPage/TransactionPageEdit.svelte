@@ -12,6 +12,7 @@
   } from '../../stores';
 
   export let row: Transaction;
+  export let props;
 
   async function onRemoveTransaction() {
     await deleteTransaction(row);
@@ -29,6 +30,7 @@
 </script>
 
 <button
+  disabled={!props?.rights?.canUpdate}
   use:modal={{
     cnt: TransactionForm,
     data: row,
@@ -37,7 +39,9 @@
 >
   ✎
 </button>
-<button on:click={onRemoveTransaction}> ✕ </button>
+<button disabled={!props?.rights?.canDelete} on:click={onRemoveTransaction}>
+  ✕
+</button>
 
 <style>
   button {

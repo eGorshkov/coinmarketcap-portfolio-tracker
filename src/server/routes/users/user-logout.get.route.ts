@@ -25,9 +25,8 @@ async function logout(props: ServerRouteProps) {
       'Set-Cookie': `uuid=; path=/; SameSite=None; domain=localhost; secure`,
     });
     stream.end('ok');
+    db.close();
   });
-
-  db.close();
 }
 
 export default logout;

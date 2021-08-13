@@ -8,7 +8,7 @@
     OptionSelectEventDetail,
   } from '../../../common/types';
   import { TABLE_SORT_TYPE } from '../../constants/common';
-  import { onMount, afterUpdate, beforeUpdate } from 'svelte';
+  import { onMount, beforeUpdate } from 'svelte';
 
   export let config: TableConfigType | null = null;
   export let values = [];

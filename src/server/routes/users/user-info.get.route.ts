@@ -1,7 +1,8 @@
 import { constants, ServerHttp2Stream } from 'http2';
 import sqlite3 from 'sqlite3';
 import { SQLITE_DIR } from '../../constants';
-import type { ServerRouteProps } from '../../../common/types';
+import type { ServerRouteProps, User } from '../../../common/types';
+import getUserRights from '../../helpers/defaultRule';
 
 async function getUserInfo(props: ServerRouteProps) {
   const db = new sqlite3.Database(SQLITE_DIR);
@@ -35,10 +36,11 @@ async function getUserInfo(props: ServerRouteProps) {
     stream.end(
       JSON.stringify(
         data
-          ? {
+          ? ({
               id: data.uuid,
               login: data.login,
-            }
+              rights: getUserRights(data),
+            } as User)
           : null
       )
     );

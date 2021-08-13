@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Active } from '../../../common/types';
-  import { actives, balance } from '../../stores';
+  import { actives, balance } from '../../stores'
 
   function percent(active: Active): number {
     return +(((active.value + active.profit) / $balance) * 100).toFixed(2);

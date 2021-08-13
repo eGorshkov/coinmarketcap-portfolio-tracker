@@ -33,7 +33,7 @@ export type Active = Pick<Transaction, 'id' | 'count' | 'coinSymbol'> & {
 
 export type TableConfigType<T = any> = {
   ordered?: boolean;
-  edited?: any;
+  edited?: { component: any; props?: any };
   headers: Array<TableHeadType<T> & TableRowType<T>>;
 };
 
@@ -117,7 +117,23 @@ export type Portfolio = {
   selected: boolean;
 };
 
+export type UserRights = {
+  actives: {
+    canView: boolean;
+  };
+  portfolios: {
+    canAdd: boolean;
+    canUpdate: boolean;
+  };
+  transactions: {
+    canAdd: boolean;
+    canUpdate: boolean;
+    canDelete: boolean;
+  };
+};
+
 export type User = {
   login: string;
   id: string;
+  rights: UserRights;
 };

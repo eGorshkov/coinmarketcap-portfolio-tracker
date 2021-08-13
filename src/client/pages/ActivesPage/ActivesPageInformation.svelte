@@ -3,6 +3,9 @@
   import modal from '../../components/Modal/modal';
   import ActivesTransactionsForm from './ActivesTransactionsForm.svelte';
   import PlusMinus from '../../components/PlusMinus/PlusMinus.svelte';
+
+  export let rights;
+
   $: profit = ((($balance - $total) / $total) * 100).toFixed(2);
   $: [best, ...other] = [...$actives].sort((a, b) => b.profit - a.profit);
   $: worst = other[other.length - 1];
@@ -18,6 +21,7 @@
   {#if best}
     <button
       class="info-item"
+      disabled={!rights?.canView}
       use:modal={{
         cnt: ActivesTransactionsForm,
         data: best,
@@ -36,6 +40,7 @@
   {#if worst}
     <button
       class="info-item"
+      disabled={!rights?.canView}
       use:modal={{
         cnt: ActivesTransactionsForm,
         data: worst,
@@ -63,6 +68,11 @@
     cursor: pointer;
   }
 
+  button:disabled {
+    opacity: 1;
+    cursor: default;
+  }
+
   .info-container {
     display: flex;
   }
@@ -74,7 +84,7 @@
     border-radius: 8px;
     text-align: left;
   }
-  
+
   .info-item:not(:last-child) {
     margin-left: 0;
   }

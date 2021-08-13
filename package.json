@@ -7,7 +7,9 @@
     "build": "rollup -c",
     "dev": "rollup -c -w",
     "start": "npm run dev",
-    "start:server": "npx nodemon src/server/index.ts"
+    "start:server": "npx nodemon src/server/index.ts",
+
+    "a": "tsc src/server/helpers/getBufferData.ts --target esnext --outfile public/server/index.js"
   },
   "author": "",
   "license": "ISC",

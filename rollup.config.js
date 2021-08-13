@@ -8,7 +8,6 @@ import { terser } from 'rollup-plugin-terser';
 import livereload from 'rollup-plugin-livereload';
 import path from 'path';
 import fs from 'fs';
-import { cyan } from 'kleur';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -71,54 +70,77 @@ function html({ title, meta }) {
   };
 }
 
-export default {
-  input: 'src/client/main.ts',
-  output: {
-    sourcemap: true,
-    format: 'iife',
-    name: 'app',
-    file: 'public/bundle.js',
-  },
-  plugins: [
-    svelte({
-      preprocess: sveltePreprocess({ sourceMap: !production }),
-      compilerOptions: {
-        dev: !production,
-      },
-    }),
-    css({ exclude: ['**/assets'], output: 'bundle.css' }),
-    html({
-      title: 'SSE',
-      meta: [
-        { property: 'charset', value: 'utf-8' },
-        { property: 'color-scheme', value: 'light dark' },
-      ],
-    }),
-    resolve({
-      browser: true,
-      dedupe: ['svelte'],
-    }),
-    commonjs(),
-    typescript({
-      sourceMap: !production,
-      inlineSources: !production,
-    }),
+// function bundleServer() {
+//   return {
+//     name: 'build-server',
+//     buildStart() {
 
-    !production && serve(),
-    !production &&
-      livereload({
-        watch: 'public/**',
-        delay: 1000,
-        https: {
-          key: fs.readFileSync('localhost-privkey.pem'),
-          cert: fs.readFileSync('localhost-cert.pem'),
+//     }
+//     generateBundle() {},
+//   };
+// }
+
+export default [
+  {
+    input: 'src/client/main.ts',
+    output: {
+      sourcemap: true,
+      format: 'iife',
+      name: 'app',
+      file: 'public/build/bundle.js',
+    },
+    plugins: [
+      svelte({
+        preprocess: sveltePreprocess({ sourceMap: !production }),
+        compilerOptions: {
+          dev: !production,
         },
       }),
-    production && terser(),
-  ],
-  watch: {
-    exclude: 'node_modules/**',
-    include: 'src/**',
-    clearScreen: false,
+      css({ exclude: ['**/assets'], output: 'bundle.css' }),
+      html({
+        title: 'SSE',
+        meta: [
+          { property: 'charset', value: 'utf-8' },
+          { property: 'color-scheme', value: 'light dark' },
+        ],
+      }),
+      resolve({
+        browser: true,
+        dedupe: ['svelte'],
+      }),
+      commonjs(),
+      typescript({
+        sourceMap: !production,
+        inlineSources: !production,
+      }),
+
+      !production && serve(),
+      !production &&
+        livereload({
+          watch: 'public/**',
+          delay: 1000,
+          https: {
+            key: fs.readFileSync('localhost-privkey.pem'),
+            cert: fs.readFileSync('localhost-cert.pem'),
+          },
+        }),
+      production && terser(),
+    ],
+    watch: {
+      exclude: 'node_modules/**',
+      include: 'src/**',
+      clearScreen: false,
+    },
   },
-};
+  {
+    input: 'src/server/index.ts',
+    plugins: [
+      typescript({ lib: ['es5', 'es6', 'dom'], target: 'es5' }),
+      commonjs(),
+    ],
+    output: {
+      file: 'public/server/node.js',
+      format: 'es',
+    },
+  },
+];

@@ -11,6 +11,7 @@
     portfolios,
     postPortfolios,
     putPortfolios,
+    user,
   } from '../../stores';
   import PortfolioForm from './PortfolioForm.svelte';
 
@@ -43,6 +44,7 @@
     const _portfolios = await getPortfolios();
     portfolios.set(_portfolios);
   }
+
 </script>
 
 <div class="portfolios-container">
@@ -56,23 +58,23 @@
     </button>
     <button
       class="portfolio-add-button"
+      disabled={!$user?.rights?.portfolios?.canAdd}
       use:modal={{ cnt: PortfolioForm, afterClosed }}>✚</button
     >
   </div>
   <div class="portfolios-item-container">
     {#each $portfolios as portfolio}
-      <div
-        class="portfolio-item {$currentPortfolioId === portfolio.id &&
-          'portfolio-item--active'}"
-      >
+      <div class="portfolio-item">
         <button
-          class="portfolio-add-button"
+          class="portfolio-add-button {$currentPortfolioId === portfolio.id &&
+            'portfolio-item--active'}"
           on:click={handleClickPortfolio(portfolio)}
         >
           {portfolio.name}
         </button>
         <button
           class="portfolio-add-button"
+          disabled={!$user?.rights?.portfolios?.canUpdate}
           use:modal={{ cnt: PortfolioForm, data: portfolio, afterClosed }}
           >✎</button
         >

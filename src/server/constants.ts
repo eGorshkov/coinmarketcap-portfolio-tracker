@@ -5,6 +5,6 @@ export const SQLITE_DIR = path.join(
   '..',
   '..',
   '__sqlite-data',
-  'data.copy.db'
+  'data.init.db'
 );
-export const BUILD_DIR = path.join(__dirname, '..', '..', 'public');
+export const BUILD_DIR = path.join(__dirname, '..', '..', 'public', 'build');

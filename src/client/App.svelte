@@ -44,6 +44,7 @@
   }
 
   async function updateActives() {
+    console.log('updateActives', $user, $currentPortfolioId);
     const _transactions = await getTransactions({
       portfolioId: $currentPortfolioId,
     });
@@ -62,6 +63,8 @@
       actives.update((state) => state.map(createActive(_prices)));
       isLoading = false;
     });
+
+    currentPortfolioId.subscribe(() => $user?.id && updateActives());
   });
 
   onDestroy(() => {
@@ -69,7 +72,6 @@
   });
 
   $: $user, update();
-  $: $currentPortfolioId, $user?.id && updateActives();
 </script>
 
 <Router history={memoryHistory}>
@@ -134,6 +136,12 @@
   :global(button) {
     background-color: var(--theme-bg-color);
     border-color: var(--theme-border-color);
+  }
+
+  :global(input:disabled),
+  :global(ui-select:disabled),
+  :global(button:disabled) {
+    opacity: 0.3;
   }
 
   :global(body) {

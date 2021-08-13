@@ -4,6 +4,7 @@ import { SQLITE_DIR } from '../../constants';
 import { getBufferData } from '../../helpers';
 import { v4 as uuid } from 'uuid';
 import type { ServerRouteProps, User } from '../../../common/types';
+import getUserRights from '../../helpers/defaultRule';
 
 async function logging(props: ServerRouteProps) {
   const { stream, headers } = props;
@@ -18,12 +19,12 @@ async function logging(props: ServerRouteProps) {
     if (!data) return;
     const user = JSON.parse(data) as { login: string; password: string };
     db.get(SQL_REQUEST, [user.login, user.password], function (err, data) {
-      if (err || !data.id) {
+      if (err || !data?.id) {
         stream.respond({
           ':status': constants.HTTP_STATUS_BAD_REQUEST,
         });
-        stream.end(err.message);
-        return console.log(err.message);
+        stream.end(null);
+        return console.log(err.message || '');
       }
 
       const _uuid = uuid();
@@ -37,6 +38,7 @@ async function logging(props: ServerRouteProps) {
       const userData: User = {
         id: _uuid,
         login: data.login,
+        rights: getUserRights(data),
       };
       stream.respond({
         ':status': constants.HTTP_STATUS_OK,
