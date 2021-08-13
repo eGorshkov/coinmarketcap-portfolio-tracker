@@ -17,14 +17,31 @@ async function logging(props: ServerRouteProps) {
 
   getBufferData(stream, headers, (data) => {
     if (!data) return;
-    const user = JSON.parse(data) as { login: string; password: string };
+    const user =
+      data &&
+      (data.split('&').reduce((acc, str) => {
+        const [key, val] = str.split('=');
+        return { ...acc, [key]: val };
+      }, {}) as { login: string; password: string });
+
     db.get(SQL_REQUEST, [user.login, user.password], function (err, data) {
-      if (err || !data?.id) {
+      console.log(data);
+
+      if (err) {
         stream.respond({
           ':status': constants.HTTP_STATUS_BAD_REQUEST,
         });
-        stream.end(null);
+        stream.end();
         return console.log(err.message || '');
+      }
+
+      if (!data?.id) {
+        stream.respond({
+          ':status': constants.HTTP_STATUS_MOVED_PERMANENTLY,
+          location: '/',
+        });
+        stream.end();
+        return;
       }
 
       const _uuid = uuid();
@@ -35,16 +52,12 @@ async function logging(props: ServerRouteProps) {
         [_uuid, data.id]
       );
 
-      const userData: User = {
-        id: _uuid,
-        login: data.login,
-        rights: getUserRights(data),
-      };
       stream.respond({
-        ':status': constants.HTTP_STATUS_OK,
+        ':status': constants.HTTP_STATUS_MOVED_PERMANENTLY,
         'Set-Cookie': `uuid=${_uuid}; path=/; SameSite=None; domain=localhost; secure`,
+        location: '/',
       });
-      stream.end(JSON.stringify(userData));
+      stream.end();
     });
 
     db.close();

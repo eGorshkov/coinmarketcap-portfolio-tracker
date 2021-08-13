@@ -17,21 +17,21 @@ import userLogout from './users/user-logout.get.route';
 import getUserInfo from './users/user-info.get.route';
 
 const routes = {
-  '/actives': new ActivesRouter(),
-  '/actives/get-risks': Route.of('GET', getActivesRisks),
+  '/api/actives': new ActivesRouter(),
+  '/api/actives/get-risks': Route.of('GET', getActivesRisks),
 
-  '/prices': new PricesRouter(),
+  '/api/prices': new PricesRouter(),
 
-  '/transactions': new TransactionsRouter(),
+  '/api/transactions': new TransactionsRouter(),
 
-  '/risks': new RisksRouter(),
+  '/api/risks': new RisksRouter(),
 
-  '/portfolios': new PortfoliosRouter(),
+  '/api/portfolios': new PortfoliosRouter(),
 
-  '/users': new UsersRouter(),
-  '/users/login': Route.of('POST', userLogin),
-  '/users/logout': Route.of('GET', userLogout),
-  '/users/info': Route.of('GET', getUserInfo),
+  '/api/users': new UsersRouter(),
+  '/api/users/login': Route.of('POST', userLogin),
+  '/api/users/logout': Route.of('GET', userLogout),
+  '/api/users/info': Route.of('GET', getUserInfo),
 };
 
 export default routes;

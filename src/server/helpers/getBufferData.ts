@@ -12,6 +12,7 @@ function getBufferData(
     buffer.push(chunk);
     if (counter === Number(headers['content-length'])) {
       const body = Buffer.concat(buffer).toString();
+      console.log(body);
       callback(body);
     }
   });

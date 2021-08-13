@@ -44,9 +44,8 @@ async function getUserInfo(props: ServerRouteProps) {
           : null
       )
     );
+    db.close();
   });
-
-  db.close();
 }
 
 export default getUserInfo;

@@ -34,8 +34,8 @@
     Hello, {$user.login}
     <button on:click={handleLogout}>LOGOUT</button>
   {:else}
-    <form on:submit={handleLogin}>
-      <input type="text" name="login" placehoplder="Login..." />
+    <form action="/api/users/login" method="POST">
+      <input type="text" name="login" placeholder="Login..." />
       <input type="text" name="password" placeholder="Password..." />
       <button type="submit">LOGIN</button>
     </form>
