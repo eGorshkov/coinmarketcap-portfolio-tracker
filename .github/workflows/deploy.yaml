@@ -24,7 +24,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Build
-        run: npm run build
+        run: npm run build:stumb
       # Deploy
       - name: Deploy
         run: rsync -e "ssh -i $HOME/.ssh/key -o StrictHostKeyChecking=no" --archive --compress --delete . shkovegor@shkovegor.dev:/var/www/shkovegor.dev/html/
+        working-directory: ./public

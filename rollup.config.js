@@ -70,16 +70,6 @@ function html({ title, meta }) {
   };
 }
 
-// function bundleServer() {
-//   return {
-//     name: 'build-server',
-//     buildStart() {
-
-//     }
-//     generateBundle() {},
-//   };
-// }
-
 export default [
   {
     input: 'src/client/main.ts',
