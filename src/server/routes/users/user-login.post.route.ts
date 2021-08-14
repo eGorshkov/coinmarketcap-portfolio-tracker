@@ -3,8 +3,8 @@ import sqlite3 from 'sqlite3';
 import { SQLITE_DIR } from '../../constants';
 import { getBufferData } from '../../helpers';
 import { v4 as uuid } from 'uuid';
+import setCookie from '../../helpers/setCookie';
 import type { ServerRouteProps, User } from '../../../common/types';
-import getUserRights from '../../helpers/defaultRule';
 
 async function logging(props: ServerRouteProps) {
   const { stream, headers } = props;
@@ -54,7 +54,7 @@ async function logging(props: ServerRouteProps) {
 
       stream.respond({
         ':status': constants.HTTP_STATUS_MOVED_PERMANENTLY,
-        'Set-Cookie': `uuid=${_uuid}; path=/; SameSite=None; domain=localhost; secure`,
+        'Set-Cookie': setCookie(`uuid=${_uuid}`),
         location: '/',
       });
       stream.end();

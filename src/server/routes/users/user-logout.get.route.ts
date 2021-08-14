@@ -2,6 +2,7 @@ import { constants, ServerHttp2Stream } from 'http2';
 import sqlite3 from 'sqlite3';
 import { SQLITE_DIR } from '../../constants';
 import type { ServerRouteProps, User } from '../../../common/types';
+import setCookie from '../../helpers/setCookie';
 
 async function logout(props: ServerRouteProps) {
   const { stream, headers } = props;
@@ -22,7 +23,7 @@ async function logout(props: ServerRouteProps) {
 
     stream.respond({
       ':status': constants.HTTP_STATUS_OK,
-      'Set-Cookie': `uuid=; path=/; SameSite=None; domain=localhost; secure`,
+      'Set-Cookie': setCookie('uuid='),
     });
     stream.end('ok');
     db.close();

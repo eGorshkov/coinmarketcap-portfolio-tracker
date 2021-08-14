@@ -29,7 +29,7 @@
     >
       <h4>Best Performer is {best.coinSymbol}</h4>
       <PlusMinus
-        isPlus={true}
+        isPlus={best.profit > 0}
         percent={+(((best.value + best.profit) / best.value) * 100).toFixed(2) -
           100}
       >
@@ -48,7 +48,7 @@
     >
       <h4>Worst Performer is {worst.coinSymbol}</h4>
       <PlusMinus
-        isPlus={false}
+        isPlus={worst.profit > 0}
         percent={+(((worst.value + worst.profit) / worst.value) * 100).toFixed(
           2
         ) - 100}

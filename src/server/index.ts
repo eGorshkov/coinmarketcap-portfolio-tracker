@@ -9,13 +9,15 @@ import getCookieAsObject from './helpers/getCookieAsObject';
 
 config({ path: '.env' });
 
+const production = !process.env.ROLLUP_WATCH;
+
 const { HTTP2_HEADER_SCHEME, HTTP2_HEADER_PATH, HTTP2_HEADER_AUTHORITY } =
   http2.constants;
 const sse = new SSE();
 const server = http2.createSecureServer(
   {
-    key: fs.readFileSync('localhost-privkey.pem'),
-    cert: fs.readFileSync('localhost-cert.pem'),
+    key: fs.readFileSync(process.env.PRIVKEY_PATH),
+    cert: fs.readFileSync(process.env.CERTIFICATE_PATH),
     allowHTTP1: true,
   },
   responseStatic
