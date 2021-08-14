@@ -33,5 +33,5 @@ jobs:
         run: npm run build
       # Deploy
       - name: Deploy api.shkovegor.dev
-        run: rsync -e "ssh -i $HOME/.ssh/key -o StrictHostKeyChecking=no" --archive --compress --delete . shkovegor@shkovegor.dev:/var/www/api.shkovegor.dev/html/
+        run: rsync -e "ssh -i $HOME/.ssh/key -o StrictHostKeyChecking=no" --archive --compress --delete . shkovegor@shkovegor.dev:/var/www/portfolio.shkovegor.dev/html/
         working-directory: ./public
