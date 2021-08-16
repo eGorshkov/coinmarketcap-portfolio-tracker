@@ -4,7 +4,7 @@ import { SQLITE_DIR } from '../../constants';
 import type { ServerRouteProps } from '../../../common/types';
 
 function getActivesRisks(props: ServerRouteProps) {
-  const { stream } = props;
+  const { res } = props;
   const SQL_REQUEST = `SELECT a.id, a.symbol,
     (SELECT ar.riskId  FROM ${process.env.ACTIVES_RISKS_DB} ar WHERE ar.activeId = a.id) as riskId,
 	  (SELECT r.value  FROM ${process.env.ACTIVES_RISKS_DB} ar, ${process.env.RISKS_DB} r WHERE ar.activeId = a.id AND ar.riskId == r.id) as riskType
@@ -13,17 +13,13 @@ function getActivesRisks(props: ServerRouteProps) {
 
   db.all(SQL_REQUEST, [], (err, data) => {
     if (err) {
-      stream.respond({
-        ':status': constants.HTTP_STATUS_BAD_REQUEST,
-      });
-      stream.end(err.message);
+      res.statusCode = constants.HTTP_STATUS_BAD_REQUEST;
+      res.end(err.message);
       return console.log(err.message);
     }
 
-    stream.respond({
-      ':status': constants.HTTP_STATUS_OK,
-    });
-    stream.end(JSON.stringify(data));
+    res.statusCode = constants.HTTP_STATUS_OK;
+    res.end(JSON.stringify(data));
     db.close();
   });
 }

@@ -1,5 +1,10 @@
 import { EventEmitter } from 'events';
-import type { ServerHttp2Stream, IncomingHttpHeaders } from 'http2';
+import type {
+  ServerHttp2Stream,
+  IncomingHttpHeaders,
+  Http2ServerRequest,
+  Http2ServerResponse,
+} from 'http2';
 import EVENTS from './events';
 
 interface SSEEvent {
@@ -14,10 +19,14 @@ export class SSE extends EventEmitter {
     super();
   }
 
-  public init(stream: ServerHttp2Stream, headers: IncomingHttpHeaders) {
+  public init(
+    req: Http2ServerRequest,
+    res: Http2ServerResponse,
+    headers: IncomingHttpHeaders
+  ) {
     let id = 0;
 
-    stream.respond({
+    res.writeHead(200, {
       'Content-Type': 'text/event-stream',
       'Cache-Control': 'no-cache',
     });
@@ -25,23 +34,21 @@ export class SSE extends EventEmitter {
     const dataListener = async (config: SSEEvent) => {
       if (!config.event) return;
       const data = await EVENTS[config.event](config.params || {});
-      stream.write(`event: ${config.event}\n`);
-      stream.write(`data: ${JSON.stringify(data)}\n`);
-      stream.write(`id: ${++id} \n`);
-      stream.write('\n');
+      res.write(`event: ${config.event}\n`);
+      res.write(`data: ${JSON.stringify(data)}\n`);
+      res.write(`id: ${++id} \n`);
+      res.write('\n');
     };
 
     this.on('data', dataListener);
 
-    stream.on('close', () => {
+    res.on('close', () => {
       this.removeListener('data', dataListener);
       --streamCount;
       if (this.getMaxListeners() > 1)
         this.setMaxListeners(this.getMaxListeners() - 1);
-      console.log(`Stream closed`);
+      res.end();
     });
-
-    console.log(`Stream ${++streamCount} created`);
   }
 
   public send(data: SSEEvent) {

@@ -6,13 +6,11 @@ import getUserRights from '../../helpers/defaultRule';
 
 async function getUserInfo(props: ServerRouteProps) {
   const db = new sqlite3.Database(SQLITE_DIR);
-  const { stream, cookie } = props;
+  const { res, cookie } = props;
 
   if (!cookie.hasOwnProperty('uuid')) {
-    stream.respond({
-      ':status': constants.HTTP_STATUS_BAD_REQUEST,
-    });
-    stream.end(null);
+    res.statusCode = constants.HTTP_STATUS_BAD_REQUEST;
+    res.end(null);
     db.close();
     return;
   }
@@ -23,17 +21,13 @@ async function getUserInfo(props: ServerRouteProps) {
       WHERE uuid == ?`;
   db.get(SQL_REQUEST, [cookie.uuid], function (err, data) {
     if (err) {
-      stream.respond({
-        ':status': constants.HTTP_STATUS_BAD_REQUEST,
-      });
-      stream.end(null);
+      res.statusCode = constants.HTTP_STATUS_BAD_REQUEST;
+      res.end(null);
       return console.log(err.message);
     }
 
-    stream.respond({
-      ':status': constants.HTTP_STATUS_OK,
-    });
-    stream.end(
+    res.statusCode = constants.HTTP_STATUS_OK;
+    res.end(
       JSON.stringify(
         data
           ? ({

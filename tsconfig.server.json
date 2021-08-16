@@ -1,0 +1,13 @@
+{
+  "include": ["**/*"],
+  "exclude": ["node_modules/*", "__sapper__/*"],
+  "strict": false,
+  "compilerOptions": {
+    "outDir": "./server",
+    "rootDir": "./src/server",
+    "allowJs": false,
+    "module": "CommonJS",
+    "esModuleInterop": true,
+    "moduleResolution": "node"
+  }
+}

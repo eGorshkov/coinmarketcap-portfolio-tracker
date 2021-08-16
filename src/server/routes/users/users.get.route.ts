@@ -4,7 +4,7 @@ import { SQLITE_DIR } from '../../constants';
 import type { ServerRouteProps } from '../../../common/types';
 
 function getUsers(props: ServerRouteProps) {
-  const { url, stream, headers } = props;
+  const { res, headers } = props;
   const db = new sqlite3.Database(SQLITE_DIR);
   const SQL_REQUEST_USERS = `SELECT 
     *,
@@ -12,17 +12,13 @@ function getUsers(props: ServerRouteProps) {
 
   db.all(SQL_REQUEST_USERS, [], (err, data) => {
     if (err) {
-      stream.respond({
-        ':status': constants.HTTP_STATUS_BAD_REQUEST,
-      });
-      stream.end(err.message);
+      res.statusCode = constants.HTTP_STATUS_BAD_REQUEST;
+      res.end(err.message);
       return console.log(err.message);
     }
 
-    stream.respond({
-      ':status': constants.HTTP_STATUS_OK,
-    });
-    stream.end(JSON.stringify(data));
+    res.statusCode = constants.HTTP_STATUS_OK;
+    res.end(JSON.stringify(data));
   });
 
   db.close();

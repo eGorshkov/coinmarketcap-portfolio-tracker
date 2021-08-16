@@ -4,7 +4,7 @@ import { SQLITE_DIR } from '../../constants';
 import type { ServerRouteProps } from '../../../common/types';
 
 function getActives(props: ServerRouteProps) {
-  const { url, stream, headers, cookie } = props;
+  const { url, res, headers, cookie } = props;
   const portfolioId = url.searchParams.has('portfolioId')
     ? +url.searchParams.get('portfolioId')
     : null;
@@ -42,17 +42,13 @@ function getActives(props: ServerRouteProps) {
 
   db.all(SQL_REQUEST_ALL_ACTIVES, [cookie.uuid], (err, data) => {
     if (err) {
-      stream.respond({
-        ':status': constants.HTTP_STATUS_BAD_REQUEST,
-      });
-      stream.end(err.message);
+      res.statusCode = constants.HTTP_STATUS_BAD_REQUEST;
+      res.end(err.message);
       return console.log(err.message);
     }
 
-    stream.respond({
-      ':status': constants.HTTP_STATUS_OK,
-    });
-    stream.end(JSON.stringify(data));
+    res.statusCode = constants.HTTP_STATUS_OK;
+    res.end(JSON.stringify(data));
     db.close();
   });
 }

@@ -5,20 +5,18 @@ import { getBufferData } from '../../helpers';
 import type { ServerRouteProps, Transaction } from '../../../common/types';
 
 function putTransactions(props: ServerRouteProps) {
-  const { stream, headers } = props;
+  const { req, res, headers } = props;
   const SQL_REQUEST = `UPDATE ${process.env.TRANSACTIONS_DB}
                      SET coinPrice = ?, count = ?,  coinSymbol = ?,  date = ?,  type = ?
 	                   WHERE id = ?`;
   const db = new sqlite3.Database(SQLITE_DIR);
 
-  getBufferData(stream, headers, (data) => {
+  getBufferData(req, headers, (data) => {
     if (!data) return;
     const transaction = JSON.parse(data) as Transaction;
     if (!transaction.id) {
-      stream.respond({
-        ':status': constants.HTTP_STATUS_BAD_REQUEST,
-      });
-      stream.end('has not transaction.id');
+      res.statusCode = constants.HTTP_STATUS_BAD_REQUEST;
+      res.end('has not transaction.id');
     }
 
     db.run(
@@ -33,13 +31,10 @@ function putTransactions(props: ServerRouteProps) {
       ],
       function (err) {
         if (err) {
-          stream.respond({
-            ':status': constants.HTTP_STATUS_BAD_REQUEST,
-          });
-          stream.end(err.message);
+          res.statusCode = constants.HTTP_STATUS_BAD_REQUEST;
+          res.end(err.message);
           return console.log(err.message);
         }
-        console.log(`Row(s) updated: ${this.changes}`);
 
         db.run(
           `DELETE FROM ${process.env.PORTFOLIOS_TRANSACTIONS_DB} WHERE transactionId = ?`,
@@ -53,10 +48,8 @@ function putTransactions(props: ServerRouteProps) {
           );
         }
 
-        stream.respond({
-          ':status': constants.HTTP_STATUS_OK,
-        });
-        stream.end('ok');
+        res.statusCode = constants.HTTP_STATUS_OK;
+        res.end('ok');
         db.close();
       }
     );

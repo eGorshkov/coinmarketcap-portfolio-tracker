@@ -7,7 +7,7 @@ import setCookie from '../../helpers/setCookie';
 import type { ServerRouteProps, User } from '../../../common/types';
 
 async function logging(props: ServerRouteProps) {
-  const { stream, headers } = props;
+  const { req, res, headers } = props;
   const SQL_REQUEST = `
     SELECT *
     FROM Users
@@ -15,7 +15,7 @@ async function logging(props: ServerRouteProps) {
         AND password == ?`;
   const db = new sqlite3.Database(SQLITE_DIR);
 
-  getBufferData(stream, headers, (data) => {
+  getBufferData(req, headers, (data) => {
     if (!data) return;
     const user =
       data &&
@@ -25,22 +25,16 @@ async function logging(props: ServerRouteProps) {
       }, {}) as { login: string; password: string });
 
     db.get(SQL_REQUEST, [user.login, user.password], function (err, data) {
-      console.log(data);
-
       if (err) {
-        stream.respond({
-          ':status': constants.HTTP_STATUS_BAD_REQUEST,
-        });
-        stream.end();
+        res.statusCode = constants.HTTP_STATUS_BAD_REQUEST;
+        res.end();
         return console.log(err.message || '');
       }
 
       if (!data?.id) {
-        stream.respond({
-          ':status': constants.HTTP_STATUS_MOVED_PERMANENTLY,
-          location: '/',
-        });
-        stream.end();
+        res.statusCode = constants.HTTP_STATUS_MOVED_PERMANENTLY;
+        res.setHeader('location', '/');
+        res.end();
         return;
       }
 
@@ -52,12 +46,10 @@ async function logging(props: ServerRouteProps) {
         [_uuid, data.id]
       );
 
-      stream.respond({
-        ':status': constants.HTTP_STATUS_MOVED_PERMANENTLY,
-        'Set-Cookie': setCookie(`uuid=${_uuid}`),
-        location: '/',
-      });
-      stream.end();
+      res.statusCode = constants.HTTP_STATUS_MOVED_PERMANENTLY;
+      res.setHeader('Set-Cookie', setCookie(`uuid=${_uuid}`));
+      res.setHeader('location', '/');
+      res.end();
     });
 
     db.close();

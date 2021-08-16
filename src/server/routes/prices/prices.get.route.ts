@@ -1,10 +1,11 @@
 import sqlite3 from 'sqlite3';
 import { SQLITE_DIR } from '../../constants';
+import type { SSE } from '../../sse/sse';
 import type { ServerRouteProps } from '../../../common/types';
 
 let intervalSSESend;
 
-function SSESend(sse) {
+function SSESend(sse: SSE) {
   const db = new sqlite3.Database(SQLITE_DIR);
 
   db.all(`SELECT symbol from ${process.env.ACTIVES_DB}`, [], (err, symbols) => {

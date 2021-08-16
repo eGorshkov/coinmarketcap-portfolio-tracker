@@ -1,4 +1,4 @@
-import { constants } from 'http2';
+import { constants, Http2ServerRequest, Http2ServerResponse } from 'http2';
 import type { IncomingHttpHeaders, ServerHttp2Stream } from 'http2';
 import type { SSE } from '../sse/sse';
 import type { ServerRouteProps } from '../../common/types';
@@ -15,18 +15,17 @@ class Route {
   public call(
     url: URL,
     sse: SSE,
-    stream: ServerHttp2Stream,
+    req: Http2ServerRequest,
+    res: Http2ServerResponse,
     headers: IncomingHttpHeaders,
     cookie: { [k in string]: string }
   ) {
     const method = headers[':method'] || HTTP2_METHOD_GET;
     try {
-      this[method]({ url, sse, stream, headers, cookie });
+      this[method]({ url, sse, req, res, headers, cookie });
     } catch (err) {
-      stream.respond({
-        ':status': constants.HTTP_STATUS_BAD_REQUEST,
-      });
-      stream.end(err.message);
+      res.statusCode = constants.HTTP_STATUS_BAD_REQUEST;
+      res.end(err.message);
     }
   }
 

@@ -4,7 +4,7 @@ import { SQLITE_DIR } from '../../constants';
 import type { ServerRouteProps } from '../../../common/types';
 
 function getPortfolios(props: ServerRouteProps) {
-  const { stream, cookie } = props;
+  const { res, cookie } = props;
   const SQL_REQUEST_PORTFOLIOS = `SELECT p.*
     FROM ${process.env.PORTFOLIOS_DB} p, ${process.env.USERS_PORTFOLIOS_DB} up
 	  WHERE up.portfolioId == p.id
@@ -14,17 +14,13 @@ function getPortfolios(props: ServerRouteProps) {
 
   db.all(SQL_REQUEST_PORTFOLIOS, [cookie.uuid], (err, data) => {
     if (err) {
-      stream.respond({
-        ':status': constants.HTTP_STATUS_BAD_REQUEST,
-      });
-      stream.end(err.message);
+      res.statusCode = constants.HTTP_STATUS_BAD_REQUEST;
+      res.end(err.message);
       return console.log(err.message);
     }
 
-    stream.respond({
-      ':status': constants.HTTP_STATUS_OK,
-    });
-    stream.end(JSON.stringify(data));
+    res.statusCode = constants.HTTP_STATUS_OK;
+    res.end(JSON.stringify(data));
     db.close();
   });
 }

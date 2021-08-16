@@ -5,12 +5,12 @@ import { getBufferData } from '../../helpers';
 import type { ServerRouteProps, Transaction } from '../../../common/types';
 
 async function postTransactions(props: ServerRouteProps) {
-  const { stream, headers, cookie } = props;
+  const { req, res, headers, cookie } = props;
   const SQL_REQUEST = `INSERT INTO ${process.env.TRANSACTIONS_DB} (coinPrice, count,  coinSymbol,  date,  type)
 	VALUES (?, ?, ?, ?, ?)`;
   const db = new sqlite3.Database(SQLITE_DIR);
 
-  getBufferData(stream, headers, (data) => {
+  getBufferData(req, headers, (data) => {
     if (!data) return;
     const transaction = JSON.parse(data) as Transaction;
     let statement = db.prepare(SQL_REQUEST);
@@ -24,10 +24,8 @@ async function postTransactions(props: ServerRouteProps) {
       ],
       function (err) {
         if (err) {
-          stream.respond({
-            ':status': constants.HTTP_STATUS_BAD_REQUEST,
-          });
-          stream.end(err.message);
+          res.statusCode = constants.HTTP_STATUS_BAD_REQUEST;
+          res.end(err.message);
           return console.log(err.message);
         }
 
@@ -43,10 +41,8 @@ async function postTransactions(props: ServerRouteProps) {
           [cookie.uuid, statement.lastID]
         );
 
-        stream.respond({
-          ':status': constants.HTTP_STATUS_OK,
-        });
-        stream.end('ok');
+        res.statusCode = constants.HTTP_STATUS_OK;
+        res.end('ok');
       }
     );
 

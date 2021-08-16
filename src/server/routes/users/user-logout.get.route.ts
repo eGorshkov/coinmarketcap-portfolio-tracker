@@ -5,7 +5,7 @@ import type { ServerRouteProps, User } from '../../../common/types';
 import setCookie from '../../helpers/setCookie';
 
 async function logout(props: ServerRouteProps) {
-  const { stream, headers } = props;
+  const { res, headers } = props;
   const _uuid = headers.cookie['uuid'];
   const SQL_REQUEST = `
     UPDATE ${process.env.USERS_DB} 
@@ -14,18 +14,14 @@ async function logout(props: ServerRouteProps) {
   const db = new sqlite3.Database(SQLITE_DIR);
   db.run(SQL_REQUEST, [_uuid], function (err, data) {
     if (err) {
-      stream.respond({
-        ':status': constants.HTTP_STATUS_BAD_REQUEST,
-      });
-      stream.end(err.message);
+      res.statusCode = constants.HTTP_STATUS_BAD_REQUEST;
+      res.end(err.message);
       return console.log(err.message);
     }
 
-    stream.respond({
-      ':status': constants.HTTP_STATUS_OK,
-      'Set-Cookie': setCookie('uuid='),
-    });
-    stream.end('ok');
+    res.statusCode = constants.HTTP_STATUS_OK;
+    res.setHeader('Set-Cookie', setCookie('uuid='));
+    res.end('ok');
     db.close();
   });
 }

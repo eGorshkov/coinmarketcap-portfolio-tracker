@@ -4,7 +4,7 @@ import { SQLITE_DIR } from '../../constants';
 import type { ServerRouteProps } from '../../../common/types';
 
 function getTransactions(props: ServerRouteProps) {
-  const { url, stream, cookie } = props;
+  const { url, res, cookie } = props;
   const db = new sqlite3.Database(SQLITE_DIR);
 
   const activityId = url.searchParams.has('activityId')
@@ -35,17 +35,13 @@ function getTransactions(props: ServerRouteProps) {
     ),
     (err, data) => {
       if (err) {
-        stream.respond({
-          ':status': constants.HTTP_STATUS_BAD_REQUEST,
-        });
-        stream.end(err.message);
+        res.statusCode = constants.HTTP_STATUS_BAD_REQUEST;
+        res.end(err.message);
         return console.log(err.message);
       }
 
-      stream.respond({
-        ':status': constants.HTTP_STATUS_OK,
-      });
-      stream.end(JSON.stringify(data));
+      res.statusCode = constants.HTTP_STATUS_OK;
+      res.end(JSON.stringify(data));
     }
   );
 

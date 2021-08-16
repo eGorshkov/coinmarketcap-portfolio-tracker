@@ -1,6 +1,5 @@
 {
   "extends": "@tsconfig/svelte/tsconfig.json",
-  "include": ["src/client/**/*", "src/common/types.ts"],
-  "exclude": ["node_modules/*", "__sapper__/*", "public/*", "src/server/**/*"],
-  "strict": false,
+  "include": ["src/client/**/*"],
+  "exclude": ["node_modules/*", "__sapper__/*"],
 }

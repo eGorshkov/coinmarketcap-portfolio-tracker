@@ -1,4 +1,9 @@
-import type { IncomingHttpHeaders, ServerHttp2Stream } from 'http2';
+import type {
+  Http2ServerRequest,
+  Http2ServerResponse,
+  IncomingHttpHeaders,
+  ServerHttp2Stream,
+} from 'http2';
 import type {
   TRANSACTION_TYPE,
   TABLE_SORT_TYPE,
@@ -106,7 +111,8 @@ export type PieChartConfig<T = any> = { datasets: PieChartType<T>[] };
 export type ServerRouteProps = {
   url: URL;
   sse: SSE;
-  stream: ServerHttp2Stream;
+  req: Http2ServerRequest;
+  res: Http2ServerResponse;
   headers: IncomingHttpHeaders;
   cookie: { [k in string]: string };
 };
