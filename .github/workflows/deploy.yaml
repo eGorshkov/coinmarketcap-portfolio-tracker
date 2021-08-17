@@ -20,12 +20,14 @@ jobs:
           mkdir "$HOME/.ssh"
           echo "${{ secrets.KEY }}" > "$HOME/.ssh/key"
           chmod 600 "$HOME/.ssh/key"
-        run: build
+      # Build
+      - name: Build shkovegor.dev
+        run: npm run build
       # Deploy
-      - name: Deploy api.shkovegor.dev
+      - name: Deploy shkovegor.dev
         run: rsync -e "ssh -i $HOME/.ssh/key -o StrictHostKeyChecking=no" --archive --compress --delete . shkovegor@shkovegor.dev:/var/www/portfolio.shkovegor.dev/html/
         working-directory: ./public
       # Deploy
-      - name: Deploy api.shkovegor.dev
+      - name: Deploy portfolio.shkovegor.dev
         run: rsync -e "ssh -i $HOME/.ssh/key -o StrictHostKeyChecking=no" --archive --compress --delete . shkovegor@shkovegor.dev:/var/www/portfolio.shkovegor.dev/server/
         working-directory: ./server
