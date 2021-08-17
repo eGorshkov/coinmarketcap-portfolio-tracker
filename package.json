@@ -7,7 +7,7 @@
     "dev": "rollup -c -w",
     "start": "npm run dev",
     "start:server": "npx nodemon src/server/index.ts",
-    "build": "npm-run-all build:*",
+    "build": "npm run build:client; npm run build:server",
     "build:client": "rollup -c",
     "build:server": "npm run tsc:server; cp package.json server/ && cp -avR ./__sqlite-data server/ && cp .env.prod server/.env",
     "tsc:server": "rm -fR server; npx tsc --project tsconfig.server.json"
@@ -28,7 +28,6 @@
     "@types/node": "^16.4.3",
     "@types/node-fetch": "^2.5.12",
     "livereload": "0.9.3",
-    "npm-run-all": "4.1.5",
     "prettier": "^2.3.2",
     "rollup": "^2.3.4",
     "rollup-plugin-css-only": "^3.1.0",
