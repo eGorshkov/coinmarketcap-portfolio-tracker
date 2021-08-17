@@ -22,9 +22,10 @@ const server = http2.createSecureServer(
   },
   (req, res) => {
     const { headers } = req;
-    const scheme = headers[HTTP2_HEADER_SCHEME];
-    const authority = headers[HTTP2_HEADER_AUTHORITY];
-    const urlPath = headers[HTTP2_HEADER_PATH];
+    const scheme = headers[process.env.HEADER_SCHEME || HTTP2_HEADER_SCHEME];
+    const authority =
+      headers[process.env.HEADER_AUTHORITY || HTTP2_HEADER_AUTHORITY];
+    const urlPath = headers[process.env.HEADER_PATH || HTTP2_HEADER_PATH];
     //@ts-ignore
     const url: URL = new URL(`${scheme}://${authority}${urlPath}`);
     const cookie = getCookieAsObject(headers.cookie);

@@ -2,12 +2,7 @@ import { constants, Http2ServerRequest, Http2ServerResponse } from 'http2';
 import type { IncomingHttpHeaders, ServerHttp2Stream } from 'http2';
 import type { SSE } from '../sse/sse';
 import type { ServerRouteProps } from '../../common/types';
-const {
-  HTTP2_METHOD_POST,
-  HTTP2_METHOD_PUT,
-  HTTP2_METHOD_DELETE,
-  HTTP2_METHOD_GET,
-} = constants;
+const { HTTP2_HEADER_METHOD, HTTP2_METHOD_GET } = constants;
 
 class Route {
   constructor() {}
@@ -20,7 +15,8 @@ class Route {
     headers: IncomingHttpHeaders,
     cookie: { [k in string]: string }
   ) {
-    const method = headers[':method'] || HTTP2_METHOD_GET;
+    const methodkey = process.env.HEADER_METHOD || HTTP2_HEADER_METHOD;
+    const method = (headers[methodkey] as string) || HTTP2_METHOD_GET;
     try {
       this[method]({ url, sse, req, res, headers, cookie });
     } catch (err) {
