@@ -35,7 +35,6 @@
   }
 
   function handleDateChange(e) {
-    console.log(e);
     data.date = new Date(e.target.value);
   }
 

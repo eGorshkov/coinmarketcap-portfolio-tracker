@@ -23,7 +23,6 @@
         ...state,
         [head.key]: e?.detail.selected || [],
       }));
-      console.log(e, $filter);
       localStorage.setItem(localStorageFilterName, JSON.stringify($filter));
     };
   }

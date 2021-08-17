@@ -21,8 +21,6 @@
       .filter((x) => x.percentage)
       .sort((a, b) => b.percentage - a.percentage)
       .forEach(({ percentage, label, color }) => {
-        console.log(percentage, label);
-
         const [startX, startY] =
           getCoordinatesForPercentage(cumulativePercentage);
         cumulativePercentage += percentage;

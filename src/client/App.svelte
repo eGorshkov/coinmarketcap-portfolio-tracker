@@ -44,7 +44,6 @@
   }
 
   async function updateActives() {
-    console.log('updateActives', $user, $currentPortfolioId);
     const _transactions = await getTransactions({
       portfolioId: $currentPortfolioId,
     });

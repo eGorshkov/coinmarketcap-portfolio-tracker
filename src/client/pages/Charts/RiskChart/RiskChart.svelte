@@ -29,7 +29,6 @@
 
   function getRiskValue(symbols) {
     const filtered = $actives.filter((x) => symbols.includes(x.coinSymbol));
-    console.log(filtered)
     return filtered.reduce(
       (acc, x) => ({
         ...acc,
@@ -94,7 +93,6 @@
   });
 
   afterUpdate(() => {
-    console.log('afterUpdate');
     pieConfig = craetePieConfig();
   });
 

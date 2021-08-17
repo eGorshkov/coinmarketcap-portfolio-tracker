@@ -93,12 +93,6 @@ export default [
       file: 'public/bundle.js',
     },
     plugins: [
-      svelte({
-        preprocess: sveltePreprocess({ sourceMap: !production }),
-        compilerOptions: {
-          dev: !production,
-        },
-      }),
       css({ exclude: ['**/assets'], output: 'bundle.css' }),
       html({
         title: 'portfolio.shkovegor',
@@ -106,6 +100,12 @@ export default [
           { property: 'charset', value: 'utf-8' },
           { property: 'color-scheme', value: 'light dark' },
         ],
+      }),
+      svelte({
+        preprocess: sveltePreprocess({ sourceMap: !production }),
+        compilerOptions: {
+          dev: !production,
+        },
       }),
       resolve({
         browser: true,

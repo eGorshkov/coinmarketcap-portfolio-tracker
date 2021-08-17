@@ -32,7 +32,6 @@ export function getTransactions(cfg?: {
         .filter(Boolean)
         .join('&')
     : '';
-  console.log('urlParams', urlParams);
 
   return fetch(`api/transactions${urlParams && '?' + urlParams}`)
     .then((response: any) => response.json())
@@ -52,7 +51,6 @@ export async function getActives(
 ): Promise<Active[]> {
   let urlParams = '';
   portfolioId && (urlParams += `?portfolioId=${portfolioId}`);
-  console.log('urlParams', urlParams);
   return await fetch(`/api/actives${urlParams}`).then((response: any) =>
     response.json()
   );

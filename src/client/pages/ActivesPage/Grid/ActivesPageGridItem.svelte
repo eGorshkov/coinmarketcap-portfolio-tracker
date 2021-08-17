@@ -20,12 +20,12 @@
 
 {#if row}
   <div class="grid-item-container">
-    <div
+    <button
       use:modal={{
         data: row,
         cnt: ActivesTransactionsForm,
       }}
-      class="grid-item {isProfit ? 'grid-item--profit' : 'grid-item--noprofit'}"
+      class="grid-item {isProfit && 'grid-item--profit'}"
     >
       <h2 class="grid-item-title">
         {row.coinSymbol}
@@ -44,9 +44,9 @@
       </p>
 
       <p>
-        Avg. Buy Price - ${row.avgPrice?.toFixed(2)}
+        Средняя цена покупки - ${row.avgPrice?.toFixed(2)}
       </p>
-    </div>
+    </button>
   </div>
 {/if}
 
@@ -63,6 +63,9 @@
   }
 
   .grid-item {
+    --color: hsla(9, 100%, 64%, 0.3);
+    --border-color: hsla(9, 100%, 64%, 0.1);
+
     cursor: pointer;
     position: relative;
     text-align: left;
@@ -72,13 +75,26 @@
     border-radius: 8px;
     padding: 10px;
     margin: auto;
+    transition: all 750ms ease-in-out, border 0ms linear;
+
+    background-color: var(--color);
+    border: 1px solid var(--border-color);
+    box-shadow: 5px 5px 0 0 var(--color);
+  }
+
+  .grid-item:hover,
+  .grid-item:focus {
+    box-shadow: 5px 5px 0 2px var(--color);
+    --border-color: hsl(227deg 96% 60%);
+    outline: none;
   }
 
   .grid-item--profit {
-    background-color: hsla(163, 15%, 53%, 0.3);
+    --color: hsla(163, 15%, 53%, 0.3);
+    --border-color: hsla(9, 100%, 64%, 0.1);
   }
 
-  .grid-item--noprofit {
-    background-color: hsla(9, 100%, 64%, 0.3);
+  .grid-item-title {
+    margin: 0;
   }
 </style>

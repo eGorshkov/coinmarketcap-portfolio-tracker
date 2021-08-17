@@ -5,10 +5,10 @@ import type { ModalType } from '../../../common/types';
 
 function modal(node, options: ModalType) {
   const overlayContainer = document.getElementById(OVERLAY_CONTAINER_ID);
+  const overlayId = ui.createId();
   let _modal;
 
   function open() {
-    const overlayId = ui.createId();
     ui.overlay.create(overlayId, close, true);
     _modal = new Modal({
       target: overlayContainer,

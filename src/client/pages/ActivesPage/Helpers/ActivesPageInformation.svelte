@@ -6,7 +6,8 @@
 
   export let rights;
 
-  $: profit = ((($balance - $total) / $total) * 100).toFixed(2);
+  $: totalProfit = +($balance - $total).toFixed(2);
+  $: profit = ((totalProfit / $total) * 100).toFixed(2);
   $: [best, ...other] = [...$actives].sort((a, b) => b.profit - a.profit);
   $: worst = other[other.length - 1];
 </script>
@@ -15,7 +16,7 @@
   <div class="info-item">
     <h4>All Time Profit</h4>
     <PlusMinus isPlus={$balance - $total > 0} percent={profit}>
-      (${$balance - $total})
+      (${totalProfit})
     </PlusMinus>
   </div>
   {#if best}

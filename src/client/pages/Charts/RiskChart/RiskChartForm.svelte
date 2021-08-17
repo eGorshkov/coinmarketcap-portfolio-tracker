@@ -15,8 +15,6 @@
 
   function handleTypeChange(activeIndex) {
     return ([row]) => {
-      console.log(activeIndex, row);
-      debugger;
       data.activesRisks[activeIndex].riskId = row.id,
       data.activesRisks[activeIndex].riskType = row.value;
     };
