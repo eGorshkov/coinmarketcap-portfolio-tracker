@@ -67,7 +67,7 @@
     position: relative;
     text-align: left;
     border: none;
-    height: 300px;
+    height: 200px;
     width: calc(100% - 40px);
     border-radius: 8px;
     padding: 10px;

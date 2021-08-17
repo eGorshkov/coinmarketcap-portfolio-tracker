@@ -101,7 +101,7 @@ export default [
       }),
       css({ exclude: ['**/assets'], output: 'bundle.css' }),
       html({
-        title: 'portfio.shkovegor',
+        title: 'portfolio.shkovegor',
         meta: [
           { property: 'charset', value: 'utf-8' },
           { property: 'color-scheme', value: 'light dark' },
