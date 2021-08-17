@@ -14,7 +14,15 @@
 </script>
 
 <h6>Текущий баланс</h6>
-<h1>${$activesBalance + $featuresBalance}</h1>
+<div class="balance-container">
+  <h1>
+    ${$activesBalance + $featuresBalance}
+  </h1>
+  <div>
+    <sup>Spot: ${$activesBalance}</sup>
+    <sub>Features: ${$featuresBalance}</sub>
+  </div>
+</div>
 
 <button on:click={() => (activeTab = 'information')}>Information</button>
 <button on:click={() => (activeTab = 'allocation')}>Allocation</button>
@@ -33,6 +41,26 @@
   .actives-container {
     display: flex;
     flex-wrap: wrap;
+  }
+
+  .balance-container {
+    display: flex;
+  }
+
+  .balance-container div {
+    position: relative;
+    flex: 1;
+  }
+
+  .balance-container div sup,.balance-container div sub {
+    position: absolute;
+    left: 5px;
+    top: 5px;
+  }
+
+  .balance-container div sub {
+    bottom: 0;
+    top: auto;
   }
 
   :global(.actives-container > :first-child) {

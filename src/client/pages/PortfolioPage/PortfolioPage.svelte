@@ -17,7 +17,10 @@
 
   function handleClickPortfolio(portfolio?: Portfolio) {
     return () => {
-      if (!portfolio) currentPortfolioId.set(null);
+      if (!portfolio) {
+        currentPortfolioId.set(null);
+        return;
+      }
 
       currentPortfolioId.update((state) => {
         if (state === portfolio.id) return null;
@@ -44,7 +47,6 @@
     const _portfolios = await getPortfolios();
     portfolios.set(_portfolios);
   }
-
 </script>
 
 <div class="portfolios-container">

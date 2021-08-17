@@ -24,7 +24,7 @@
 
 <div class="info-container">
   <div class="info-item">
-    <h4>All Time Stock Profit</h4>
+    <h4>All Time Spot Profit</h4>
     <PlusMinus isPlus={totalActivesProfit > 0} percent={activesProfit}>
       (${totalActivesProfit})
     </PlusMinus>

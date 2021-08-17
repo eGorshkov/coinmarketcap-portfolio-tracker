@@ -20,26 +20,28 @@ export const user = writable<User | null>(null);
 
 export const features = writable<Feature[]>([]);
 
-export const activesBalance = derived(
-  actives,
-  (actives) =>
-    +actives.reduce((sum, x) => (sum += x.value + x.profit), 0).toFixed(2)
+export const activesBalance = derived(actives, (actives) =>
+  actives.length
+    ? +actives.reduce((sum, x) => (sum += x.value + x.profit), 0).toFixed(2)
+    : 0
 );
 
-export const activesTotal = derived(
-  actives,
-  (actives) => +actives.reduce((sum, x) => (sum += x.value), 0).toFixed(2)
+export const activesTotal = derived(actives, (actives) =>
+  actives.length
+    ? +actives.reduce((sum, x) => (sum += x.value), 0).toFixed(2)
+    : 0
 );
 
-export const featuresTotal = derived(
-  features,
-  (features) => +features.reduce((sum, x) => (sum += x.margin), 0).toFixed(2)
+export const featuresTotal = derived(features, (features) =>
+  features.length
+    ? +features.reduce((sum, x) => (sum += x.margin), 0).toFixed(2)
+    : 0
 );
 
-export const featuresBalance = derived(
-  features,
-  (features) =>
-    +features.reduce((sum, x) => (sum += x.margin + x.pnl), 0).toFixed(2)
+export const featuresBalance = derived(features, (features) =>
+  features.length
+    ? +features.reduce((sum, x) => (sum += x.margin + x.pnl), 0).toFixed(2)
+    : 0
 );
 
 export function createPrices(

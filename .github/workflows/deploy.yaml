@@ -23,13 +23,13 @@ jobs:
         # Build
       - name: Install dependencies
         run: npm ci
-      - name: Build shkovegor.dev
+      - name: Build
         run: npm run build
       # Deploy
-      - name: Deploy shkovegor.dev
+      - name: Deploy client
         run: rsync -e "ssh -i $HOME/.ssh/key -o StrictHostKeyChecking=no" --archive --compress --delete . shkovegor@shkovegor.dev:/var/www/portfolio.shkovegor.dev/html/
         working-directory: ./public
       # Deploy
-      - name: Deploy portfolio.shkovegor.dev
+      - name: Deploy server
         run: rsync -e "ssh -i $HOME/.ssh/key -o StrictHostKeyChecking=no" --archive --compress --delete . shkovegor@shkovegor.dev:/var/www/portfolio.shkovegor.dev/server/
         working-directory: ./server
