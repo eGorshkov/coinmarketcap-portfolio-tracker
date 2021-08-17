@@ -51,7 +51,7 @@
         onRendering: {
           type: RENDERING_TYPE.TEXT,
           _this: (row: Transaction) =>
-            $portfolios.find((x) => x.id === row.portfolioId)?.name,
+            $portfolios.find((x) => x.id === row.portfolioId)?.name ?? 'Main',
         },
       },
     ],

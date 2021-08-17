@@ -13,10 +13,14 @@
   export let rights;
 
   $: totalActivesProfit = +($activesBalance - $activesTotal).toFixed(2);
-  $: activesProfit = ((totalActivesProfit / $activesTotal) * 100).toFixed(2);
+  $: activesProfit = $activesTotal
+    ? ((totalActivesProfit / $activesTotal) * 100).toFixed(2)
+    : 0;
 
   $: totalFeaturesProfit = +($featuresBalance - $featuresTotal).toFixed(2);
-  $: featuresProfit = ((totalFeaturesProfit / $featuresTotal) * 100).toFixed(2);
+  $: featuresProfit = $featuresTotal
+    ? ((totalFeaturesProfit / $featuresTotal) * 100).toFixed(2)
+    : 0;
 
   $: [best, ...other] = [...$actives].sort((a, b) => b.profit - a.profit);
   $: worst = other[other.length - 1];
