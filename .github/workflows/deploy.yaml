@@ -27,9 +27,7 @@ jobs:
         run: npm run build
       # Deploy
       - name: Deploy shkovegor.dev
-        run: |
-          ls $HOME/.ssh
-          rsync -e "ssh -i $HOME/.ssh/key -o StrictHostKeyChecking=no" --archive --compress --delete . shkovegor@shkovegor.dev:/var/www/portfolio.shkovegor.dev/html/
+        run: rsync -e "ssh -i $HOME/.ssh/key -o StrictHostKeyChecking=no" --archive --compress --delete . shkovegor@shkovegor.dev:/var/www/portfolio.shkovegor.dev/html/
         working-directory: ./public
       # Deploy
       - name: Deploy portfolio.shkovegor.dev
