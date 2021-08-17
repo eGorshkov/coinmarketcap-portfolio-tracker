@@ -1,8 +1,19 @@
 :root {
-    --theme-bg-color: hsl(240deg 6% 10%);
+    --theme-bg-color: hsla(180, 73%, 3%, 1);
     --theme-header-bg-color: hsl(228deg 18% 16%);
     --theme-color: hsl(0deg 0% 100%);
     --theme-link-active-color: hsl(227deg 96% 60%);
     --theme-border-color: hsl(210deg 23% 95%);
     --theme-overlay-bg-color: hsl(0deg 0% 100% / 50%);
+
+    --theme-active-element: hsla(163, 15%, 53%, 1);
+
+    /* ["FAFAF7",
+        "A7BAB8",
+        "020D0D", 
+        "D2C6AE", 
+        "B3D8D7", 
+        "75998F", 
+        "485659", 
+        "828B77"] */
 }

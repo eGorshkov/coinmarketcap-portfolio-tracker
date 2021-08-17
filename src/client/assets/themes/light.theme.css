@@ -1,0 +1,19 @@
+:root {
+  --theme-bg-color: hsla(60, 23%, 97%, 1);
+  --theme-header-bg-color: hsl(0deg 0% 100%);
+  --theme-color: hsl(228deg 18% 16%);
+  --theme-link-active-color: hsl(227deg 96% 60%);
+  --theme-border-color: hsl(228deg 18% 16%);
+  --theme-overlay-bg-color: hsl(0deg 0% 0% / 50%);
+
+  --theme-active-element: hsla(174, 12%, 69%, 1);
+
+  /* ["FAFAF7", hsla(60, 23%, 97%, 1);
+      "A7BAB8", hsla(174, 12%, 69%, 1);
+      "020D0D",
+      "D2C6AE",
+      "B3D8D7",
+      "75998F",
+      "485659",
+      "828B77"] */
+}

@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { Active } from '../../../common/types';
-  import { actives, balance } from '../../stores'
+  import type { Active } from '../../../../common/types';
+  import { actives, balance } from '../../../stores'
 
   function percent(active: Active): number {
     return +(((active.value + active.profit) / $balance) * 100).toFixed(2);
@@ -41,6 +41,7 @@
     width: 100%;
     display: flex;
     font-weight: bold;
+    margin: 10px 0;
   }
 
   .chart-item::before {

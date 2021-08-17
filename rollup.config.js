@@ -33,16 +33,23 @@ function serve() {
 }
 
 function html({ title, meta }) {
-  const themeDirrectory = path.join('src', 'client', 'assets');
-  const themes = fs.readdirSync(themeDirrectory);
+  const assetsDirrectory = path.join('src', 'client', 'assets');
+  const themes = fs.readdirSync(path.join(assetsDirrectory, 'themes'));
   return {
     name: 'html',
     buildStart(outputOptions, bundle) {
+      this.emitFile({
+        type: 'asset',
+        fileName: 'favicon.ico',
+        source: fs.readFileSync(path.join(assetsDirrectory, 'favicon.ico')),
+      });
       themes.forEach((theme) => {
         this.emitFile({
           type: 'asset',
-          fileName: `assets/${theme}`,
-          source: fs.readFileSync(path.join(themeDirrectory, theme)).toString(),
+          fileName: `assets/themes/${theme}`,
+          source: fs
+            .readFileSync(path.join(assetsDirrectory, 'themes', theme))
+            .toString(),
         });
       });
     },
@@ -50,15 +57,21 @@ function html({ title, meta }) {
       this.emitFile({
         type: 'asset',
         fileName: 'index.html',
-        source: `
+        source:
+          `
         <!DOCTYPE html>
         <html lang="en">
           <head>
             ${meta.map((x) => `<meta ${x.property}="${x.value}">`).join('\n')}
             <title>${title}</title>
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link href="https://fonts.googleapis.com/css2?family=Fira+Sans+Condensed&display=swap" rel="stylesheet">
+            
             <link href="bundle.css" rel="stylesheet">
-            <link href="assets/dark.theme.css" rel="stylesheet" media="(prefers-color-scheme: dark)">
-            <link href="assets/light.theme.css" rel="stylesheet" media="(prefers-color-scheme: light)">
+            <link href="assets/themes/dark.theme.css" rel="stylesheet" media="(prefers-color-scheme: dark)">
+            <link href="assets/themes/light.theme.css" rel="stylesheet" media="(prefers-color-scheme: light)">
+            <link rel="shortcut icon" type="image/jpg" href="favicon.ico"/>
           </head>
           <body>
             <script src="bundle.js"></script>
@@ -88,7 +101,7 @@ export default [
       }),
       css({ exclude: ['**/assets'], output: 'bundle.css' }),
       html({
-        title: 'SSE',
+        title: 'portfio.shkovegor',
         meta: [
           { property: 'charset', value: 'utf-8' },
           { property: 'color-scheme', value: 'light dark' },
@@ -117,8 +130,6 @@ export default [
       production && terser(),
     ],
     watch: {
-      exclude: 'node_modules/**',
-      include: 'src/**',
       clearScreen: false,
     },
   },

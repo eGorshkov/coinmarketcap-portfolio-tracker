@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { Active } from '../../../common/types';
-  import PlusMinus from '../../components/PlusMinus/PlusMinus.svelte';
+  import type { Active } from '../../../../common/types';
+  import PlusMinus from '../../../components/PlusMinus/PlusMinus.svelte';
 
   export let row: Active;
 

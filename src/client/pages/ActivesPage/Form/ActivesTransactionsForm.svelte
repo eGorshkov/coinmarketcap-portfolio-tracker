@@ -1,8 +1,7 @@
 <script lang="ts">
-  import Table from '../../components/Table/Table.svelte';
-  import type { Active, Transaction } from '../../../common/types';
+  import type { Active, Transaction } from '../../../../common/types';
   import { onMount } from 'svelte';
-  import { getTransactions, portfolios, currentPortfolioId } from '../../stores';
+  import { getTransactions, currentPortfolioId } from '../../../stores';
   export let data: Active;
   let transactions: Transaction[] = [];
   onMount(async () => {
@@ -19,7 +18,6 @@
     <p>Количество {data.coinSymbol}</p>
     <p>Цена транзакции</p>
     <p>Дата</p>
-    <p>Портфолио</p>
   </div>
   {#each transactions as transaction}
     <div class="transaction-item ">
@@ -29,7 +27,6 @@
         {transaction.count * (+transaction.coinPrice || 0)}
       </p>
       <p>{transaction.date.toLocaleString()}</p>
-      <p>{$portfolios.find(x => x.id === transaction.portfolioId)?.name}</p>
     </div>
   {/each}
 </div>
@@ -43,6 +40,6 @@
   }
   .transaction-item {
     display: grid;
-    grid-template-columns: repeat(5, 150px);
+    grid-template-columns: repeat(4, 150px);
   }
 </style>

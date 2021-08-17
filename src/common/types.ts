@@ -39,6 +39,7 @@ export type Active = Pick<Transaction, 'id' | 'count' | 'coinSymbol'> & {
 export type TableConfigType<T = any> = {
   ordered?: boolean;
   edited?: { component: any; props?: any };
+  customTableComponent?: any;
   headers: Array<TableHeadType<T> & TableRowType<T>>;
 };
 

@@ -78,12 +78,17 @@
         {/if}
       </tr>
     </thead>
-    <tbody>
-      {#each $tableData as row, rowIndex}
-        <TableCoinRow {row} {config} {rowIndex} />
-      {/each}
-    </tbody>
+    {#if !config.customTableComponent}
+      <tbody>
+        {#each $tableData as row, rowIndex}
+          <TableCoinRow {row} {config} {rowIndex} />
+        {/each}
+      </tbody>
+    {/if}
   </table>
+  {#if config.customTableComponent}
+    <svelte:component this={config.customTableComponent} data={$tableData} />
+  {/if}
 {:else}
   has not config
 {/if}

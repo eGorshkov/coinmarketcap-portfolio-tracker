@@ -58,7 +58,7 @@
     sse = new EventSource('/stream');
 
     sse.addEventListener('get-prices', (e) => {
-      const _prices = JSON.parse(e.data);
+      const _prices = JSON.parse(e?.data);
       prices.set(_prices);
       actives.update((state) => state.map(createActive(_prices)));
       isLoading = false;
@@ -114,6 +114,9 @@
 <div id={OVERLAY_CONTAINER_ID} />
 
 <style>
+  :global(*) {
+    font-family: 'Fira Sans Condensed', sans-serif;
+  }
   :global(.ui-overlay) {
     position: fixed;
     width: 100%;
@@ -136,6 +139,7 @@
   :global(button) {
     background-color: var(--theme-bg-color);
     border-color: var(--theme-border-color);
+    font-size: 1rem;
   }
 
   :global(input:disabled),

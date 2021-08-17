@@ -89,16 +89,7 @@
     position: relative;
     flex-direction: column;
     padding-right: 30px;
-  }
-
-  .portfolios-container::after {
-    content: '';
-    position: absolute;
-    height: 100%;
-    right: 15px;
-    top: 0;
-    width: 1px;
-    background-color: hsl(9deg 100% 64% / 30%);
+    min-width: 350px;
   }
 
   .portfolios-item-container {
@@ -120,7 +111,7 @@
   }
 
   .portfolio-item--active {
-    background-color: hsl(9deg 100% 64% / 30%);
+    background-color: var(--theme-active-element);
   }
 
   .portfolio-item > *:first-child {

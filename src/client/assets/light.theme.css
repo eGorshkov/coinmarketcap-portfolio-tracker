@@ -1,8 +1,0 @@
-:root {
-    --theme-bg-color: hsl(216deg 56% 98%);
-    --theme-header-bg-color: hsl(0deg 0% 100%);
-    --theme-color: hsl(228deg 18% 16%);
-    --theme-link-active-color: hsl(227deg 96% 60%);
-    --theme-border-color: hsl(228deg 18% 16%);
-    --theme-overlay-bg-color: hsl(0deg 0% 0% / 50%);
-}

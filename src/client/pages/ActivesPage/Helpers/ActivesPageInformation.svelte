@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { actives, total, balance } from '../../stores';
-  import modal from '../../components/Modal/modal';
-  import ActivesTransactionsForm from './ActivesTransactionsForm.svelte';
-  import PlusMinus from '../../components/PlusMinus/PlusMinus.svelte';
+  import { actives, total, balance } from '../../../stores';
+  import modal from '../../../components/Modal/modal';
+  import ActivesTransactionsForm from '../Form/ActivesTransactionsForm.svelte';
+  import PlusMinus from '../../../components/PlusMinus/PlusMinus.svelte';
 
   export let rights;
 
