@@ -38,7 +38,7 @@
         onRendering: {
           type: RENDERING_TYPE.TEXT,
           _this: (row: Feature) =>
-            row.pnl
+            row.pnl >= 0
               ? `+$${row.pnl.toFixed(2)}`
               : row.pnl?.toFixed(2).replace('-', '-$'),
         },

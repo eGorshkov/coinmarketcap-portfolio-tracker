@@ -40,6 +40,10 @@
       </h3>
 
       <p>
+        Вложено - ${row.value?.toFixed(2)}
+      </p>
+
+      <p>
         Текущая цена - ${row.price?.toFixed(2)}
       </p>
 

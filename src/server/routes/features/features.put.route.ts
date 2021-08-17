@@ -6,7 +6,7 @@ import type { Feature, ServerRouteProps } from '../../../common/types';
 
 function putFeatures(props: ServerRouteProps) {
   const { req, res, headers } = props;
-  const SQL_REQUEST = `UPDATE Transactions
+  const SQL_REQUEST = `UPDATE Features
                      SET coinSymbol = ?, margin = ?,  coefficient = ?,  startPrice = ?,  count = ?
 	                   WHERE id = ?`;
   const db = new sqlite3.Database(SQLITE_DIR);
