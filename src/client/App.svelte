@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { afterUpdate, onDestroy, onMount } from 'svelte';
+  import { onDestroy, onMount } from 'svelte';
   import {
     Router,
     Route,
@@ -11,6 +11,7 @@
   import TransactionPage from './pages/TransactionPage/TransactionPage.svelte';
   import ActivesPage from './pages/ActivesPage/ActivesPage.svelte';
   import ChartsPage from './pages/Charts/ChartsPage.svelte';
+  import FeaturesPage from './pages/FeaturesPage/FeaturesPage.svelte';
   import {
     prices,
     transactions,
@@ -23,6 +24,9 @@
     portfolios,
     currentPortfolioId,
     user,
+    getFeatures,
+    features,
+    createFeature,
   } from './stores';
   import { OVERLAY_CONTAINER_ID } from './constants/ui';
   import UserBlock from './components/UserBlock/UserBlock.svelte';
@@ -48,18 +52,20 @@
       portfolioId: $currentPortfolioId,
     });
     const _actives = await getActives($currentPortfolioId);
-
+    const _features = await getFeatures();
     transactions.set(_transactions);
     actives.set(_actives.map(createActive($prices)));
+    features.set(_features.map(createFeature($prices)));
   }
 
   onMount(async () => {
     sse = new EventSource('/stream');
 
-    sse.addEventListener('get-prices', (e) => {
+    sse.addEventListener('get-prices', async (e) => {
       const _prices = JSON.parse(e?.data);
       prices.set(_prices);
       actives.update((state) => state.map(createActive(_prices)));
+      features.update((state) => state.map(createFeature(_prices)));
       isLoading = false;
     });
 
@@ -80,6 +86,7 @@
     <nav class="header__navigation">
       <Link class="navigation__link" to="/">Home</Link>
       <Link class="navigation__link" to="transactions">Transactions</Link>
+      <Link class="navigation__link" to="features">Features</Link>
       <Link class="navigation__link" to="charts">Charts</Link>
     </nav>
 
@@ -102,6 +109,10 @@
 
     <Route path="transactions">
       <TransactionPage />
+    </Route>
+
+    <Route path="features">
+      <FeaturesPage />
     </Route>
 
     <Route path="charts">

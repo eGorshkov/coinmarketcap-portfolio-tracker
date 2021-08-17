@@ -11,6 +11,8 @@ import RisksRouter from './risks';
 
 import PortfoliosRouter from './portfolios';
 
+import FeaturesRouter from './features';
+
 import UsersRouter from './users';
 import userLogin from './users/user-login.post.route';
 import userLogout from './users/user-logout.get.route';
@@ -27,6 +29,8 @@ const routes = {
   '/api/risks': new RisksRouter(),
 
   '/api/portfolios': new PortfoliosRouter(),
+
+  '/api/features': new FeaturesRouter(),
 
   '/api/users': new UsersRouter(),
   '/api/users/login': Route.of('POST', userLogin),

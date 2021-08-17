@@ -2,25 +2,25 @@ import { constants } from 'http2';
 import sqlite3 from 'sqlite3';
 import { SQLITE_DIR } from '../../constants';
 import { getBufferData } from '../../helpers';
-import type { ServerRouteProps, Transaction } from '../../../common/types';
+import type { Feature, ServerRouteProps } from '../../../common/types';
 
 async function postTransactions(props: ServerRouteProps) {
   const { req, res, headers, cookie } = props;
-  const SQL_REQUEST = `INSERT INTO Transactions (coinPrice, count,  coinSymbol,  date,  type)
+  const SQL_REQUEST = `INSERT INTO Features (coinSymbol, margin, coefficient, startPrice, count)
 	VALUES (?, ?, ?, ?, ?)`;
   const db = new sqlite3.Database(SQLITE_DIR);
 
   getBufferData(req, headers, (data) => {
     if (!data) return;
-    const transaction = JSON.parse(data) as Transaction;
+    const feature = JSON.parse(data) as Feature;
     let statement = db.prepare(SQL_REQUEST);
     statement.run(
       [
-        transaction.coinPrice,
-        transaction.count,
-        transaction.coinSymbol,
-        transaction.date,
-        transaction.type,
+        feature.coinSymbol,
+        feature.margin,
+        feature.coefficient,
+        feature.startPrice,
+        feature.count,
       ],
       function (err) {
         if (err) {
@@ -29,15 +29,8 @@ async function postTransactions(props: ServerRouteProps) {
           return console.log(err.message);
         }
 
-        if (transaction.portfolioId) {
-          db.run(
-            `INSERT INTO Portfolios_Transactions (portfolioId, transactionId) VALUES (?, ?)`,
-            [transaction.portfolioId, statement.lastID]
-          );
-        }
-
         db.run(
-          `INSERT INTO Users_Transactions (userId, transactionId) VALUES ((SELECT id FROM Users WHERE uuid = ?), ?)`,
+          `INSERT INTO Users_Features (userId, featureId) VALUES ((SELECT id FROM Users WHERE uuid = ?), ?)`,
           [cookie.uuid, statement.lastID]
         );
 

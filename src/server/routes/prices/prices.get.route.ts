@@ -8,7 +8,7 @@ let intervalSSESend;
 function SSESend(sse: SSE) {
   const db = new sqlite3.Database(SQLITE_DIR);
 
-  db.all(`SELECT symbol from ${process.env.ACTIVES_DB}`, [], (err, symbols) => {
+  db.all(`SELECT symbol from Actives`, [], (err, symbols) => {
     symbols = symbols.map((x) => x.symbol);
     sse.send({
       event: 'get-prices',

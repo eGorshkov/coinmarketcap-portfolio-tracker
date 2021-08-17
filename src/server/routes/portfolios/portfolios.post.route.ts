@@ -6,7 +6,7 @@ import type { Portfolio, ServerRouteProps } from '../../../common/types';
 
 async function postPortfolio(props: ServerRouteProps) {
   const { req, res, headers, cookie } = props;
-  const SQL_REQUEST = `INSERT INTO ${process.env.PORTFOLIOS_DB} (name)
+  const SQL_REQUEST = `INSERT INTO Portfolios (name)
 	VALUES (?)`;
   const db = new sqlite3.Database(SQLITE_DIR);
 
@@ -22,8 +22,8 @@ async function postPortfolio(props: ServerRouteProps) {
       }
 
       db.run(
-        `INSERT INTO ${process.env.USERS_PORTFOLIOS_DB} (userId, portfolioId)
-	        VALUES ((SELECT id FROM ${process.env.USERS_DB} WHERE uuid = ?), ?)`,
+        `INSERT INTO Users_Portfolios (userId, portfolioId)
+	        VALUES ((SELECT id FROM Users WHERE uuid = ?), ?)`,
         [cookie.uuid, statement.lastID]
       );
 

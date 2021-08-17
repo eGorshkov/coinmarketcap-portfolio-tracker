@@ -1,22 +1,38 @@
 <script lang="ts">
-  import { actives, total, balance } from '../../../stores';
+  import {
+    actives,
+    activesTotal,
+    featuresTotal,
+    activesBalance,
+    featuresBalance,
+  } from '../../../stores';
   import modal from '../../../components/Modal/modal';
   import ActivesTransactionsForm from '../Form/ActivesTransactionsForm.svelte';
   import PlusMinus from '../../../components/PlusMinus/PlusMinus.svelte';
 
   export let rights;
 
-  $: totalProfit = +($balance - $total).toFixed(2);
-  $: profit = ((totalProfit / $total) * 100).toFixed(2);
+  $: totalActivesProfit = +($activesBalance - $activesTotal).toFixed(2);
+  $: activesProfit = ((totalActivesProfit / $activesTotal) * 100).toFixed(2);
+
+  $: totalFeaturesProfit = +($featuresBalance - $featuresTotal).toFixed(2);
+  $: featuresProfit = ((totalFeaturesProfit / $featuresTotal) * 100).toFixed(2);
+
   $: [best, ...other] = [...$actives].sort((a, b) => b.profit - a.profit);
   $: worst = other[other.length - 1];
 </script>
 
 <div class="info-container">
   <div class="info-item">
-    <h4>All Time Profit</h4>
-    <PlusMinus isPlus={$balance - $total > 0} percent={profit}>
-      (${totalProfit})
+    <h4>All Time Stock Profit</h4>
+    <PlusMinus isPlus={totalActivesProfit > 0} percent={activesProfit}>
+      (${totalActivesProfit})
+    </PlusMinus>
+  </div>
+  <div class="info-item">
+    <h4>All Time Feature Profit</h4>
+    <PlusMinus isPlus={totalFeaturesProfit > 0} percent={featuresProfit}>
+      (${totalFeaturesProfit})
     </PlusMinus>
   </div>
   {#if best}

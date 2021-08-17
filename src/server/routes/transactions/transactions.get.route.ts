@@ -17,8 +17,8 @@ function getTransactions(props: ServerRouteProps) {
   const SQL_REQUEST_TRANSACTIONS = [
     `SELECT 
     tr.*,
-    (SELECT ptc.portfolioId  FROM ${process.env.PORTFOLIOS_TRANSACTIONS_DB} ptc WHERE ptc.transactionId = tr.id) as portfolioId
-    FROM ${process.env.TRANSACTIONS_DB} tr, ${process.env.ACTIVES_TRANSASCTIONS_DB} actr, ${process.env.USERS_TRANSACTIONS_DB} ut
+    (SELECT ptc.portfolioId  FROM Portfolios_Transactions ptc WHERE ptc.transactionId = tr.id) as portfolioId
+    FROM Transactions tr, Actives_Transactions actr, Users_Transactions ut
     WHERE ut.transactionId == tr.id
 		  AND ut.userId == (SELECT id FROM Users WHERE uuid == IFNULL(?, ""))
       AND actr.transactionId == tr.id`,

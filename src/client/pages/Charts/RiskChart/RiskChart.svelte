@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { actives, balance, getActiveRisks, getRisks, postRisks, total } from '../../../stores';
+  import { actives, activesBalance, getActiveRisks, getRisks, postRisks, activesTotal } from '../../../stores';
   import { afterUpdate, onMount } from 'svelte';
 
   import modal from '../../../components/Modal/modal';
@@ -43,11 +43,11 @@
   }
 
   function getPercentageBySymbols(symbols) {
-    return getRiskValue(symbols).value / $total;
+    return getRiskValue(symbols).value / $activesTotal;
   }
 
   function createDatasets(riskData) {
-    if (!riskData || !$balance) {
+    if (!riskData || !$activesBalance) {
       return [];
     }
     return [

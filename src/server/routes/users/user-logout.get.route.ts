@@ -8,7 +8,7 @@ async function logout(props: ServerRouteProps) {
   const { res, headers } = props;
   const _uuid = headers.cookie['uuid'];
   const SQL_REQUEST = `
-    UPDATE ${process.env.USERS_DB} 
+    UPDATE Users 
       SET uuid = NULL
       WHERE uuid == ?`;
   const db = new sqlite3.Database(SQLITE_DIR);

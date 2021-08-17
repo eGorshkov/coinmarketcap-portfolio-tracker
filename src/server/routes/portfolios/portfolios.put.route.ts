@@ -6,7 +6,7 @@ import type { Portfolio, ServerRouteProps } from '../../../common/types';
 
 function putPortfolios(props: ServerRouteProps) {
   const { req, res, headers } = props;
-  const SQL_REQUEST = `UPDATE ${process.env.PORTFOLIOS_DB}
+  const SQL_REQUEST = `UPDATE Portfolios
                      SET name = ?
                      WHERE id = ?`;
   const db = new sqlite3.Database(SQLITE_DIR);

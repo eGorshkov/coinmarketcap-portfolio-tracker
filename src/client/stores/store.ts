@@ -1,5 +1,11 @@
 import { writable, derived, Readable } from 'svelte/store';
-import type { Transaction, Active, Portfolio, User } from '../../common/types';
+import type {
+  Transaction,
+  Active,
+  Portfolio,
+  User,
+  Feature,
+} from '../../common/types';
 
 export const transactions = writable<Transaction[]>([]);
 
@@ -12,15 +18,28 @@ export const currentPortfolioId = writable<Portfolio['id'] | null>(null);
 
 export const user = writable<User | null>(null);
 
-export const total = derived(
+export const features = writable<Feature[]>([]);
+
+export const activesBalance = derived(
+  actives,
+  (actives) =>
+    +actives.reduce((sum, x) => (sum += x.value + x.profit), 0).toFixed(2)
+);
+
+export const activesTotal = derived(
   actives,
   (actives) => +actives.reduce((sum, x) => (sum += x.value), 0).toFixed(2)
 );
 
-export const balance = derived(
-  actives,
-  (actives) =>
-    +actives.reduce((sum, x) => (sum += x.value + x.profit), 0).toFixed(2)
+export const featuresTotal = derived(
+  features,
+  (features) => +features.reduce((sum, x) => (sum += x.margin), 0).toFixed(2)
+);
+
+export const featuresBalance = derived(
+  features,
+  (features) =>
+    +features.reduce((sum, x) => (sum += x.margin + x.pnl), 0).toFixed(2)
 );
 
 export function createPrices(
@@ -46,6 +65,17 @@ export function createActive(prices) {
       ...active,
       profit: +(active.count * price - active.value).toFixed(2),
       price,
+    };
+  };
+}
+
+export function createFeature(prices) {
+  return (feature: Feature) => {
+    const price = prices[feature.coinSymbol];
+    return {
+      ...feature,
+      pnl: feature.count * (price - feature.startPrice),
+      liquidation: feature.startPrice * (1 - 1 / feature.coefficient),
     };
   };
 }

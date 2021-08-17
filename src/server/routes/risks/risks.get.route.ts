@@ -5,7 +5,7 @@ import type { ServerRouteProps } from '../../../common/types';
 function getRisks(props: ServerRouteProps) {
   const { res } = props;
   const db = new sqlite3.Database(SQLITE_DIR);
-  const SQL_REQUEST = `SELECT * FROM ${process.env.RISKS_DB}`;
+  const SQL_REQUEST = `SELECT * FROM Risks`;
   db.all(SQL_REQUEST, [], (err, data) => {
     if (err) {
       res.statusCode = constants.HTTP_STATUS_BAD_REQUEST;

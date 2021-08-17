@@ -17,7 +17,7 @@ async function getUserInfo(props: ServerRouteProps) {
 
   const SQL_REQUEST = `
     SELECT *
-      FROM ${process.env.USERS_DB} 
+      FROM Users 
       WHERE uuid == ?`;
   db.get(SQL_REQUEST, [cookie.uuid], function (err, data) {
     if (err) {

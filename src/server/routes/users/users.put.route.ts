@@ -6,7 +6,7 @@ import type { ServerRouteProps, User } from '../../../common/types';
 
 function putUsers(props: ServerRouteProps) {
   const { req, res, headers } = props;
-  const SQL_REQUEST = `UPDATE ${process.env.TRANSACTIONS_DB}
+  const SQL_REQUEST = `UPDATE Transactions
                      SET login = ?, password = ?
 	                   WHERE id = ?`;
   const db = new sqlite3.Database(SQLITE_DIR);

@@ -6,7 +6,7 @@ import type { Portfolio, ServerRouteProps } from '../../../common/types';
 
 function deletePortfolios(props: ServerRouteProps) {
   const { req, res, headers } = props;
-  const SQL_REQUEST = `DELETE FROM ${process.env.PORTFOLIOS_DB} WHERE id = ?`;
+  const SQL_REQUEST = `DELETE FROM Portfolios WHERE id = ?`;
   const db = new sqlite3.Database(SQLITE_DIR);
 
   getBufferData(req, headers, (data) => {

@@ -6,7 +6,7 @@ import type { ServerRouteProps } from '../../../common/types';
 
 async function postRisks(props: ServerRouteProps) {
   const { req, res, headers } = props;
-  const SQL_REQUEST = `INSERT INTO ${process.env.ACTIVES_RISKS_DB} (activeId, riskId)
+  const SQL_REQUEST = `INSERT INTO Actives_Risks (activeId, riskId)
 	VALUES (?, ?)`;
   const db = new sqlite3.Database(SQLITE_DIR);
 
@@ -19,7 +19,7 @@ async function postRisks(props: ServerRouteProps) {
       return console.log('Has not values');
     }
 
-    db.run(`DELETE FROM ${process.env.ACTIVES_RISKS_DB}`, []);
+    db.run(`DELETE FROM Actives_Risks`, []);
 
     let statement = db.prepare(SQL_REQUEST);
     for (const active of values) {

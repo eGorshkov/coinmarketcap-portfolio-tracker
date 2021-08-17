@@ -10,7 +10,7 @@ import type {
 
 function deleteUsers(props: ServerRouteProps) {
   const { req, res, headers } = props;
-  const SQL_REQUEST = `DELETE FROM ${process.env.USERS_DB} WHERE id = ?`;
+  const SQL_REQUEST = `DELETE FROM Users WHERE id = ?`;
   const db = new sqlite3.Database(SQLITE_DIR);
 
   getBufferData(req, headers, (data) => {

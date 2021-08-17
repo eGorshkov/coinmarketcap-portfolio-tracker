@@ -8,7 +8,7 @@ function getUsers(props: ServerRouteProps) {
   const db = new sqlite3.Database(SQLITE_DIR);
   const SQL_REQUEST_USERS = `SELECT 
     *,
-    (SELECT ptc.portfolioId  FROM ${process.env.USERS_DB}`;
+    (SELECT ptc.portfolioId  FROM Users`;
 
   db.all(SQL_REQUEST_USERS, [], (err, data) => {
     if (err) {

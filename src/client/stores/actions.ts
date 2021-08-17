@@ -1,4 +1,11 @@
-import type { Active, Portfolio, Transaction, User } from '../../common/types';
+import { xlink_attr } from 'svelte/internal';
+import type {
+  Active,
+  Feature,
+  Portfolio,
+  Transaction,
+  User,
+} from '../../common/types';
 
 //#region TRANSACTIONS
 export async function postTransaction(transaction: Transaction) {
@@ -130,4 +137,31 @@ export async function getUsers(): Promise<any> {
   return await fetch('/api/users').then((response) => response.json());
 }
 
+//#endregion
+
+//#region FEATURES
+export async function getFeatures() {
+  return await fetch('/api/features').then((response) => response.json());
+}
+
+export async function postFeatures(data) {
+  return await fetch('/api/features', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function putFeatures(portfolio: Feature) {
+  return fetch('/api/features', {
+    method: 'PUT',
+    body: JSON.stringify(portfolio),
+  });
+}
+
+export async function deleteFeatures(portfolio: Feature) {
+  return fetch('/api/features', {
+    method: 'DELETE',
+    body: JSON.stringify(portfolio),
+  });
+}
 //#endregion

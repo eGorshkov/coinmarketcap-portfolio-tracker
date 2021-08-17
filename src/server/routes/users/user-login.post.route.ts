@@ -40,7 +40,7 @@ async function logging(props: ServerRouteProps) {
 
       const _uuid = uuid();
       db.run(
-        `UPDATE ${process.env.USERS_DB}
+        `UPDATE Users
                      SET uuid = ?
 	                   WHERE id = ?`,
         [_uuid, data.id]

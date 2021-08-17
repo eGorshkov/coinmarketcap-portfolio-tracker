@@ -18,13 +18,13 @@ function getActives(props: ServerRouteProps) {
       SUM(tr.count) as count,
       SUM(tr.count*tr.coinPrice) as value,
       IFNULL(SUM(tr.count*tr.coinPrice)/SUM(tr.count), 0) as avgPrice,
-      (SELECT GROUP_CONCAT(DISTINCT ptc.portfolioId) FROM ${process.env.PORTFOLIOS_TRANSACTIONS_DB} ptc WHERE ptc.transactionId == atc.transactionId) as portfolioIds
+      (SELECT GROUP_CONCAT(DISTINCT ptc.portfolioId) FROM Portfolios_Transactions ptc WHERE ptc.transactionId == atc.transactionId) as portfolioIds
 
     FROM
-      ${process.env.ACTIVES_DB} ac, 
-      ${process.env.ACTIVES_TRANSASCTIONS_DB} atc, 
-      ${process.env.TRANSACTIONS_DB} tr,
-      ${process.env.USERS_TRANSACTIONS_DB} ut
+      Actives ac, 
+      Actives_Transactions atc, 
+      Transactions tr,
+      Users_Transactions ut
 
     WHERE ac.id == atc.activityId
       AND tr.id == atc.transactionId

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { balance, user } from '../../stores';
+  import { activesBalance, featuresBalance, user } from '../../stores';
   import PortfolioPage from '../PortfolioPage/PortfolioPage.svelte';
   import ActivesPageAllocation from './Helpers/ActivesPageAllocation.svelte';
   import ActivesPageInformation from './Helpers/ActivesPageInformation.svelte';
@@ -14,7 +14,7 @@
 </script>
 
 <h6>Текущий баланс</h6>
-<h1>${$balance}</h1>
+<h1>${$activesBalance + $featuresBalance}</h1>
 
 <button on:click={() => (activeTab = 'information')}>Information</button>
 <button on:click={() => (activeTab = 'allocation')}>Allocation</button>

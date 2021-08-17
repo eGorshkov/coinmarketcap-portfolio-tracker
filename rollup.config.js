@@ -57,8 +57,7 @@ function html({ title, meta }) {
       this.emitFile({
         type: 'asset',
         fileName: 'index.html',
-        source:
-          `
+        source: `
         <!DOCTYPE html>
         <html lang="en">
           <head>
@@ -133,15 +132,4 @@ export default [
       clearScreen: false,
     },
   },
-  // {
-  //   input: 'src/server/index.ts',
-  //   plugins: [
-  //     typescript({ lib: ['es5', 'es6', 'dom'], target: 'es5' }),
-  //     commonjs(),
-  //   ],
-  //   output: {
-  //     file: 'public/server/node.js',
-  //     format: 'es',
-  //   },
-  // },
 ];

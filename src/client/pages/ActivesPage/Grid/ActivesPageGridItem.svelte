@@ -75,7 +75,7 @@
     border-radius: 8px;
     padding: 10px;
     margin: auto;
-    transition: all 750ms ease-in-out, border 0ms linear;
+    transition: all 175ms ease-in-out, border 0ms linear;
 
     background-color: var(--color);
     border: 1px solid var(--border-color);

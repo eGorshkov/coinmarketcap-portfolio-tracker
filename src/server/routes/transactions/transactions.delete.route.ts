@@ -6,7 +6,7 @@ import type { ServerRouteProps, Transaction } from '../../../common/types';
 
 function deleteTransactions(props: ServerRouteProps) {
   const { req, res, headers } = props;
-  const SQL_REQUEST = `DELETE FROM ${process.env.TRANSACTIONS_DB} WHERE id = ?`;
+  const SQL_REQUEST = `DELETE FROM Transactions WHERE id = ?`;
   const db = new sqlite3.Database(SQLITE_DIR);
 
   getBufferData(req, headers, (data) => {

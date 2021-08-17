@@ -144,3 +144,12 @@ export type User = {
   id: string;
   rights: UserRights;
 };
+
+export type Feature = Pick<Transaction, 'id' | 'coinSymbol'> & {
+  coefficient: number;
+  margin: number;
+  startPrice: number;
+  count: number;
+  pnl: number;
+  liquidation: number;
+};

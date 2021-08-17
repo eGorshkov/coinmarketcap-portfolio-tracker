@@ -1,9 +1,9 @@
 <script lang="ts">
   import type { Active } from '../../../../common/types';
-  import { actives, balance } from '../../../stores'
+  import { actives, activesBalance } from '../../../stores'
 
   function percent(active: Active): number {
-    return +(((active.value + active.profit) / $balance) * 100).toFixed(2);
+    return +(((active.value + active.profit) / $activesBalance) * 100).toFixed(2);
   }
 
   $: [first, second, third, four, ...others] = [...$actives].sort(

@@ -2,19 +2,23 @@ import { constants } from 'http2';
 import sqlite3 from 'sqlite3';
 import { SQLITE_DIR } from '../../constants';
 import { getBufferData } from '../../helpers';
-import type { ServerRouteProps, Transaction } from '../../../common/types';
+import type { Feature, ServerRouteProps } from '../../../common/types';
 
-async function postUsers(props: ServerRouteProps) {
+function deleteFeatures(props: ServerRouteProps) {
   const { req, res, headers } = props;
-  const SQL_REQUEST = `INSERT INTO Transactions (login, password)
-	VALUES (?, ?)`;
+  const SQL_REQUEST = `DELETE FROM Features WHERE id = ?`;
   const db = new sqlite3.Database(SQLITE_DIR);
 
   getBufferData(req, headers, (data) => {
     if (!data) return;
-    const user = JSON.parse(data) as { login: string; password: string };
-    let statement = db.prepare(SQL_REQUEST);
-    statement.run([user.login, user.password], function (err) {
+    let transaction = JSON.parse(data) as Feature;
+
+    if (!transaction.id) {
+      res.statusCode = constants.HTTP_STATUS_BAD_REQUEST;
+      res.end(`has not transaction.id`);
+    }
+
+    db.run(SQL_REQUEST, transaction.id, function (err) {
       if (err) {
         res.statusCode = constants.HTTP_STATUS_BAD_REQUEST;
         res.end(err.message);
@@ -23,11 +27,9 @@ async function postUsers(props: ServerRouteProps) {
 
       res.statusCode = constants.HTTP_STATUS_OK;
       res.end('ok');
+      db.close();
     });
-
-    statement.finalize();
-    db.close();
   });
 }
 
-export default postUsers;
+export default deleteFeatures;
