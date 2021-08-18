@@ -35,7 +35,7 @@ jobs:
       # Restart
       - name: Restart server
         run: |
-          ssh shkovegor@shkovegor.dev
+          ssh i $HOME/.ssh/key shkovegor@shkovegor.dev
           cd /var/www/portfolio.shkovegor.dev/server
           pm2 stop portfolio-api
           npm i
