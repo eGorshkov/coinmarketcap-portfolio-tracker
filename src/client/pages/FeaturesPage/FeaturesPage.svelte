@@ -31,7 +31,6 @@
       },
       { title: 'Ликвидация', key: 'liquidation' },
       { title: 'Маржа', key: 'margin', filtered: true },
-      { title: 'PNL', key: 'pnl' },
       {
         title: 'PNL',
         key: 'pnl',

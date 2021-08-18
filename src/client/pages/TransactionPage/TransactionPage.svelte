@@ -54,6 +54,10 @@
             $portfolios.find((x) => x.id === row.portfolioId)?.name ?? 'Main',
         },
       },
+      {
+        title: 'Тип',
+        key: 'type',
+      },
     ],
   };
 
@@ -75,7 +79,10 @@
 </script>
 
 <div class="transaction-page">
-  <button disabled={!$user?.rights?.transactions?.canAdd} use:modal={{ cnt: TransactionForm, afterClosed }}>Add</button>
+  <button
+    disabled={!$user?.rights?.transactions?.canAdd}
+    use:modal={{ cnt: TransactionForm, afterClosed }}>Add</button
+  >
   <Table {config} values={$transactions} tableName="transaction" />
 </div>
 

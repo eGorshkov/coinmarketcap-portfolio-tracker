@@ -20,7 +20,6 @@
     return {
       ...data,
       date: new Date(_date),
-      type: TRANSACTION_TYPE.BUY,
     };
   }
 
@@ -38,8 +37,13 @@
     data.date = new Date(e.target.value);
   }
 
-  $: _date = data.date?.toISOString().slice(0, 16) || ''
-  $: selectedPortfolio = $portfolios.find(x => x.id === data.portfolioId)?.name || '';
+  function handleTypeChange([_type]) {
+    data.type = _type;
+  }
+
+  $: _date = data.date?.toISOString().slice(0, 16) || '';
+  $: selectedPortfolio =
+    $portfolios.find((x) => x.id === data.portfolioId)?.name || '';
 </script>
 
 <div class="transaction-form-container">
@@ -92,6 +96,14 @@
         isSelected={(row) => row.id === data.portfolioId}
         onSelect={handlePortfolioChange}
         options={$portfolios}
+      />
+    </div>
+    <div class="transaction-form--date">
+      <label for="portflio">Тип</label>
+      <Select
+        selected={data.type}
+        onSelect={handleTypeChange}
+        options={[TRANSACTION_TYPE.BUY, TRANSACTION_TYPE.SELL]}
       />
     </div>
     <div class="transaction-form--value">

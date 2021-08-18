@@ -15,9 +15,9 @@ function getActives(props: ServerRouteProps) {
       ac.id,
       ac.symbol as coinSymbol,
       COUNT(tr.id) as transactionsCount,	
-      SUM(tr.count) as count,
-      SUM(tr.count*tr.coinPrice) as value,
-      IFNULL(SUM(tr.count*tr.coinPrice)/SUM(tr.count), 0) as avgPrice,
+      SUM(IIF(tr.type == "SELL", -tr.count, tr.count)) as count,
+      SUM(IIF(tr.type == "SELL", -tr.count, tr.count)*tr.coinPrice) as value,
+      IFNULL(SUM(IIF(tr.type == "SELL", -tr.count, tr.count)*tr.coinPrice)/SUM(IIF(tr.type == "SELL", -tr.count, tr.count)), 0) as avgPrice,
       (SELECT GROUP_CONCAT(DISTINCT ptc.portfolioId) FROM Portfolios_Transactions ptc WHERE ptc.transactionId == atc.transactionId) as portfolioIds
 
     FROM
@@ -37,6 +37,8 @@ function getActives(props: ServerRouteProps) {
   ]
     .filter(Boolean)
     .join('\n');
+
+  console.log(SQL_REQUEST_ALL_ACTIVES);
 
   const db = new sqlite3.Database(SQLITE_DIR);
 
