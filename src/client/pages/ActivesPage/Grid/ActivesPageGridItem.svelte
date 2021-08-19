@@ -2,6 +2,8 @@
   import type { Active } from '../../../../common/types';
   import modal from '../../../components/Modal/modal';
   import PlusMinus from '../../../components/PlusMinus/PlusMinus.svelte';
+  import Usd from '../../../components/USD/USD.svelte';
+  import { prices } from '../../../stores';
   import ActivesTransactionsForm from '../Form/ActivesTransactionsForm.svelte';
 
   export let row: Active;
@@ -13,12 +15,10 @@
 
   $: isProfit = row.profit >= 0;
   $: percent = getPercent(row);
-  $: diff = isProfit
-    ? `+$${row.profit?.toString()}`
-    : row.profit?.toString().replace('-', '-$');
+  $: price = $prices[row.coinSymbol] ?? null;
 </script>
 
-{#if row}
+{#if row && price}
   <div class="grid-item-container">
     <button
       use:modal={{
@@ -30,7 +30,7 @@
       <h2 class="grid-item-title">
         {row.coinSymbol}
         <PlusMinus isPlus={isProfit} {percent}>
-          ({diff})
+          (<Usd {isProfit} value={row.profit} />)
         </PlusMinus>
       </h2>
 
@@ -45,12 +45,25 @@
 
       <p>
         Текущая цена - ${row.price?.toFixed(2)}
+        <PlusMinus
+          percent={+price?.priceChangePercent}
+          isPlus={+price?.priceChange >= 0}
+        >
+          (<Usd
+            isProfit={+price?.priceChange >= 0}
+            value={+price?.priceChange ?? 0}
+          />) за 24 часа
+        </PlusMinus>
       </p>
 
       <p>
         Средняя цена покупки - ${row.avgPrice?.toFixed(2)}
       </p>
     </button>
+  </div>
+{:else}
+  <div class="grid-item-container" >
+    <button class="grid-item grid-item--profit"></button>
   </div>
 {/if}
 
@@ -59,6 +72,7 @@
     width: 50%;
     margin-bottom: 20px;
   }
+  
 
   @media (max-width: 665px) {
     .grid-item-container {

@@ -38,8 +38,6 @@ function getActives(props: ServerRouteProps) {
     .filter(Boolean)
     .join('\n');
 
-  console.log(SQL_REQUEST_ALL_ACTIVES);
-
   const db = new sqlite3.Database(SQLITE_DIR);
 
   db.all(SQL_REQUEST_ALL_ACTIVES, [cookie.uuid], (err, data) => {

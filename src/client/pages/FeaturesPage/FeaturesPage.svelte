@@ -26,7 +26,7 @@
         key: 'startPrice',
         onRendering: {
           type: RENDERING_TYPE.TEXT,
-          _this: (row: Feature) => $prices[row.coinSymbol],
+          _this: (row: Feature) => $prices[row.coinSymbol]?.lastPrice || 0,
         },
       },
       { title: 'Ликвидация', key: 'liquidation' },

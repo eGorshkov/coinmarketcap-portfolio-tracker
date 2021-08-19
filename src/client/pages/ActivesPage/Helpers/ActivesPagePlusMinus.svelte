@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Active } from '../../../../common/types';
   import PlusMinus from '../../../components/PlusMinus/PlusMinus.svelte';
+import Usd from '../../../components/USD/USD.svelte';
 
   export let row: Active;
 
@@ -10,12 +11,8 @@
   }
 
   $: percent = getPercent(row);
-  $: diff =
-    row.profit >= 0
-      ? `+$${row.profit?.toString()}`
-      : row.profit?.toString().replace('-', '-$');
 </script>
 
-<span>{diff}</span>
+<Usd isProfit={row.profit >= 0} value={row.profit} />
 <br />
 <PlusMinus isPlus={row.profit >= 0} {percent} />

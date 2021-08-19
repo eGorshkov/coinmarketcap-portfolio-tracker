@@ -32,11 +32,3 @@ jobs:
       - name: Deploy server
         run: rsync -e "ssh -i $HOME/.ssh/key -o StrictHostKeyChecking=no" --archive --compress --delete . shkovegor@shkovegor.dev:/var/www/portfolio.shkovegor.dev/server/
         working-directory: ./server
-      # Restart
-      - name: Restart server
-        run: |
-          ssh i $HOME/.ssh/key shkovegor@shkovegor.dev
-          cd /var/www/portfolio.shkovegor.dev/server
-          pm2 stop portfolio-api
-          npm i
-          pm2 start portfolio-api

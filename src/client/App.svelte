@@ -15,7 +15,6 @@
   import {
     prices,
     transactions,
-    createPrices,
     getTransactions,
     getActives,
     actives,

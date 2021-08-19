@@ -4,7 +4,7 @@
 </script>
 
 {#if percent !== 0}
-  <span class={isPlus ? 'green' : 'red'}>
+  <span class="difference {isPlus ? 'green' : 'red'}">
     {isPlus ? '▲' : '▼'}
     {percent.toString().replace('-', '')}%
     <slot />
@@ -17,15 +17,15 @@
 {/if}
 
 <style>
-  span {
+  .difference.green {
     font-weight: bold;
   }
 
-  .green {
+  :global(.difference.green) {
     color: teal;
   }
 
-  .red {
+  :global(.difference.red) {
     color: tomato;
   }
 </style>

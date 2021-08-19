@@ -5,11 +5,12 @@ import type {
   Portfolio,
   User,
   Feature,
+  Prices,
 } from '../../common/types';
 
 export const transactions = writable<Transaction[]>([]);
 
-export const prices = writable<{ [key: string]: number | string | null }>({});
+export const prices = writable<Prices>({});
 
 export const actives = writable<Active[]>([]);
 
@@ -46,23 +47,21 @@ export const featuresBalance = derived(features, (features) =>
 
 export function createPrices(
   transactions: Transaction[],
-  prices = {}
-): {
-  [key: string]: number | null;
-} {
+  prices: Prices = {}
+): Prices {
   const unique = Array.from(new Set(transactions.map((x) => x.coinSymbol)));
   return unique.reduce(
     (acc: object, symbol: string) => ({
       ...acc,
-      [symbol]: prices[symbol] ?? null,
+      [symbol]: +prices[symbol]?.lastPrice,
     }),
     {}
   );
 }
 
-export function createActive(prices) {
+export function createActive(prices: Prices) {
   return (active: Active) => {
-    const price = prices[active.coinSymbol];
+    const price = +prices[active.coinSymbol]?.lastPrice;
     return {
       ...active,
       profit: +(active.count * price - active.value).toFixed(2),
@@ -71,9 +70,11 @@ export function createActive(prices) {
   };
 }
 
-export function createFeature(prices) {
+export function createFeature(prices: Prices) {
   return (feature: Feature) => {
-    const price = prices[feature.coinSymbol];
+    const price = +prices[feature.coinSymbol]?.lastPrice;
+    console.log(feature.coinSymbol, price, feature.count, feature.startPrice);
+
     return {
       ...feature,
       pnl: feature.count * (price - feature.startPrice),

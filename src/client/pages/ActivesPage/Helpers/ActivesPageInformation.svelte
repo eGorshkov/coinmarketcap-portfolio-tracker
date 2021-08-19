@@ -9,6 +9,7 @@
   import modal from '../../../components/Modal/modal';
   import ActivesTransactionsForm from '../Form/ActivesTransactionsForm.svelte';
   import PlusMinus from '../../../components/PlusMinus/PlusMinus.svelte';
+  import Usd from '../../../components/USD/USD.svelte';
 
   export let rights;
 
@@ -54,7 +55,7 @@
         percent={+(((best.value + best.profit) / best.value) * 100).toFixed(2) -
           100}
       >
-        (${best.profit})
+        (<Usd isProfit={best.profit >= 0} value={best.value} />)
       </PlusMinus>
     </button>
   {/if}
@@ -74,7 +75,7 @@
           2
         ) - 100}
       >
-        ({worst.profit.toString().replace('-', '-$')})
+        (<Usd isProfit={worst.profit >= 0} value={worst.value} />)
       </PlusMinus>
     </button>
   {/if}
