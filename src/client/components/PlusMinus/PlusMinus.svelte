@@ -3,15 +3,15 @@
   export let percent;
 </script>
 
-{#if percent !== 0}
-  <span class="difference {isPlus ? 'green' : 'red'}">
-    {isPlus ? '▲' : '▼'}
-    {percent.toString().replace('-', '')}%
+{#if isNaN(percent)}
+  <span>
+    0
     <slot />
   </span>
 {:else}
-  <span>
-    0
+  <span class="difference {isPlus ? 'green' : 'red'}">
+    {isPlus ? '▲' : '▼'}
+    {percent === NaN ? 0 : percent.toString().replace('-', '')}%
     <slot />
   </span>
 {/if}

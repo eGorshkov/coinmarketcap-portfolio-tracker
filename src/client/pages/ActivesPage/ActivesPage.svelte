@@ -1,9 +1,17 @@
 <script lang="ts">
-  import { activesBalance, featuresBalance, user } from '../../stores';
+  import {
+    activesBalance,
+    featuresBalance,
+    prices,
+    transactions,
+    user,
+  } from '../../stores';
   import PortfolioPage from '../PortfolioPage/PortfolioPage.svelte';
   import ActivesPageAllocation from './Helpers/ActivesPageAllocation.svelte';
   import ActivesPageInformation from './Helpers/ActivesPageInformation.svelte';
   import ActivesPageGridContainer from './Grid/ActivesPageGridContainer.svelte';
+  import PlusMinus from '../../components/PlusMinus/PlusMinus.svelte';
+  import Usd from '../../components/USD/USD.svelte';
 
   const tabs = {
     information: ActivesPageInformation,
@@ -11,16 +19,29 @@
   };
 
   let activeTab: keyof typeof tabs = 'information';
+
+  $: activesBalanceChange = $transactions.reduce(
+    (sum, x) => (sum += x.count * +$prices[x.coinSymbol]?.lastPrice),
+    0
+  );
+  $: activesBalanceChangePercent =
+    (1 - $activesBalance / activesBalanceChange) * 100;
 </script>
 
 <h6>Текущий баланс</h6>
 <div class="balance-container">
   <h1>
-    ${$activesBalance + $featuresBalance}
+    ${($activesBalance + $featuresBalance || 0).toFixed(2)}
   </h1>
   <div>
-    <sup>Spot: ${$activesBalance}</sup>
-    <sub>Features: ${$featuresBalance}</sub>
+    <sup
+      >Spot: ${$activesBalance || 0}
+      <PlusMinus
+        isPlus={activesBalanceChangePercent >= 0}
+        percent={+activesBalanceChangePercent.toFixed(2)}>за 24 часа</PlusMinus
+      ></sup
+    >
+    <sub>Features: ${$featuresBalance || 0}</sub>
   </div>
 </div>
 
@@ -52,7 +73,8 @@
     flex: 1;
   }
 
-  .balance-container div sup,.balance-container div sub {
+  .balance-container div sup,
+  .balance-container div sub {
     position: absolute;
     left: 5px;
     top: 5px;

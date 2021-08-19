@@ -9,7 +9,7 @@
     "start:server": "npx nodemon src/server/index.ts",
     "build": "npm run build:client; npm run build:server",
     "build:client": "rollup -c",
-    "build:server": "npm run tsc:server; cp -avR ./__sqlite-data server/ && cp .env.prod server/.env",
+    "build:server": "npm run tsc:server; cp package.json server/ && cp -avR ./__sqlite-data server/ && cp .env.prod server/.env",
     "tsc:server": "rm -fR server; npx tsc --project tsconfig.server.json"
     },
   "author": "",
